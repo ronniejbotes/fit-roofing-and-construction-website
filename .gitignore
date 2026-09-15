@@ -1,0 +1,35 @@
+# Untouched capture kept for verification only. Every page in it is a near
+# duplicate of the rewritten copy that ships, so committing it would roughly
+# double the repo for no benefit.
+_raw/
+
+# Tooling
+node_modules/
+
+# Local scratch
+.probe/
+
+# Throwaway probe scripts. Anything named _foo.mjs at the repo root or in tools/
+# is a one-off written to answer a single question — by a person or by an agent —
+# and is not part of the build.
+_*.mjs
+_*.json
+_*.txt
+_*.png
+tools/_*
+shots/
+
+# OS / editor noise
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Generated verification reports. Regenerate with npm run verify / compare.
+.compare.json
+.compare-mobile.json
+.scrollcompare-*.json
+.interactions-*.json
+.parity.json
+.probe.json
+_redirects.observed

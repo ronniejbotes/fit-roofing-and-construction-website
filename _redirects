@@ -1,0 +1,83 @@
+# Redirects that ALREADY EXIST on fitroofingco.com today.
+#
+# Nothing here is new. The migration itself needs no redirects: every live URL
+# keeps its exact path in this repo, so /about/ is about/index.html,
+# /hail-damage-roof-texas/ is hail-damage-roof-texas/index.html, and so on.
+#
+# These rules exist because the LIVE site answers them right now. If the new
+# host does not, each of these URLs goes from working (301 -> a real page) to
+# dead (404), and that is the change that would cost backlinks. Every rule was
+# checked against live on 15 September 2026 — by tools/discover.mjs for the ones
+# linked from the site, and by direct requests for the patterns.
+#
+# Exact rules are listed with and without their trailing slash: the live site
+# answers both forms, and relying on a host to normalise that is how a working
+# URL quietly becomes a 404 on cutover.
+#
+# Format: <from> <to> <status>, Netlify / Cloudflare Pages style. First match
+# wins, so the specific rules sit above the patterns. `:name` matches one path
+# segment and `*` matches the rest. tools/serve.mjs replays this file locally.
+
+# ---- Old service URLs -------------------------------------------------------
+# The service pages used to live under /services/. Six of these are still
+# linked from /blog/; the other two answer the same way.
+/services/attics                  /attics-texas/                301
+/services/attics/                 /attics-texas/                301
+/services/commercial-roofing      /commercial-roofing-texas/    301
+/services/commercial-roofing/     /commercial-roofing-texas/    301
+/services/gutter-installation     /gutter-installation-texas/   301
+/services/gutter-installation/    /gutter-installation-texas/   301
+/services/roof-installation       /roof-installation-texas/     301
+/services/roof-installation/      /roof-installation-texas/     301
+/services/roof-repair             /roof-repair-texas/           301
+/services/roof-repair/            /roof-repair-texas/           301
+/services/storm-repair            /storm-repair-texas/          301
+/services/storm-repair/           /storm-repair-texas/          301
+/services/skylight-installation   /skylight-installation-texas/ 301
+/services/skylight-installation/  /skylight-installation-texas/ 301
+/services/roof-replacement        /roof-replacement-texas/      301
+/services/roof-replacement/       /roof-replacement-texas/      301
+
+# ---- Archives Yoast has switched off -----------------------------------------
+# Author archives: both real authors 301 to the homepage. Unknown authors 404
+# on live, so there is deliberately no /author/* pattern.
+/author/p3akl3ads     /  301
+/author/p3akl3ads/    /  301
+/author/seodev2       /  301
+/author/seodev2/      /  301
+
+# Date archives: every 2026 archive (year, month, day) 301s to the homepage.
+# 2026 is the only year with posts; other years 404 on live. Six day archives
+# are linked from the post dates on /blog/.
+/2026                 /  301
+/2026/*               /  301
+
+# The old default-category path, and the retired "home" slug.
+/category/uncategorized   /uncategorized/  301
+/category/uncategorized/  /uncategorized/  301
+/home                     /                301
+/home/                    /                301
+
+# ---- Feeds, switched off -----------------------------------------------------
+# Every feed 301s to the page it belongs to. The specific rules must stay above
+# the /:slug/feed/ pattern, or /comments/feed/ would be sent to /comments/.
+/feed                 /         301
+/feed/                /         301
+/feed/atom/           /         301
+/feed/rss2/           /feed/    301
+/rss                  /feed/    301
+/rss/                 /feed/    301
+/comments/feed        /         301
+/comments/feed/       /         301
+/tag/:tag/feed        /tag/:tag/  301
+/tag/:tag/feed/       /tag/:tag/  301
+/:slug/feed           /:slug/     301
+/:slug/feed/          /:slug/     301
+
+# ---- WordPress core ----------------------------------------------------------
+/sitemap.xml          /sitemap_index.xml  301
+/wp-sitemap.xml       /sitemap_index.xml  301
+/index.php            /                   301
+/blog/page/1          /blog/              301
+/blog/page/1/         /blog/              301
+/favicon.ico          /wp-content/uploads/2026/03/cropped-Gold-house-roof-and-windows-icon-1-32x32.png  302

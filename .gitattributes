@@ -1,2 +1,27 @@
 # Auto detect text files and perform LF normalization
-* text=auto
+* text=auto eol=lf
+
+# Static mirror of fitroofingco.com — keep every asset byte-identical to the
+# live site. Git must not "helpfully" normalise line endings inside binaries.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.avif  binary
+*.svg   text
+*.ico   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.eot   binary
+*.mp4   binary
+*.webm  binary
+*.mov   binary
+*.mp3   binary
+*.wav   binary
+*.pdf   binary
+*.zip   binary
+*.json  text
+*.lottie binary

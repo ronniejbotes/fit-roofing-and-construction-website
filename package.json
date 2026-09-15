@@ -1,0 +1,38 @@
+{
+  "name": "fit-roofing-and-construction-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Static HTML mirror of fitroofingco.com — same URLs, same content, no WordPress.",
+  "scripts": {
+    "discover": "node tools/discover.mjs",
+    "mirror": "node tools/mirror-browser.mjs",
+    "assets": "node tools/fetch-assets.mjs",
+    "fix": "node tools/apply-fixes.mjs",
+    "fix:dry": "node tools/apply-fixes.mjs --dry",
+    "serve": "node tools/serve.mjs",
+    "serve:lan": "node -e \"process.env.HOST='0.0.0.0';process.env.PORT=process.env.PORT||'4401';import('./tools/serve.mjs')\"",
+    "test": "node tools/test-extract.mjs",
+    "verify": "node tools/verify.mjs",
+    "verify:live": "node tools/verify.mjs --live",
+    "linkcheck": "node tools/linkcheck.mjs",
+    "redirects": "node tools/redirects-check.mjs",
+    "scroll": "node tools/scrollcompare.mjs",
+    "scroll:mobile": "node tools/scrollcompare.mjs --mobile",
+    "scroll:tablet": "node tools/scrollcompare.mjs --tablet",
+    "interactions": "node tools/interactions.mjs",
+    "interactions:mobile": "node tools/interactions.mjs --mobile",
+    "parity": "node tools/parity.mjs",
+    "parity:binary": "node tools/parity.mjs --binary",
+    "forms": "node tools/form-inventory.mjs",
+    "audit": "node tools/runtime-audit.mjs",
+    "audit:fetch": "node tools/runtime-audit.mjs --fetch",
+    "compare": "node tools/compare.mjs",
+    "compare:mobile": "node tools/compare.mjs --mobile",
+    "functions": "node tools/functions.mjs",
+    "textdiff": "node tools/textdiff.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.62.1"
+  }
+}
