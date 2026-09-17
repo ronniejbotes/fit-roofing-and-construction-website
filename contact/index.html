@@ -191,8 +191,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 					<h2 class="elementor-heading-title elementor-size-default">Send Us a Message</h2>				</div>
 				<div class="elementor-element elementor-element-e79e222 elementor-widget__width-initial elementor-widget elementor-widget-text-editor" data-id="e79e222" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
 									<div class="text-center mb-10 max-w-3xl mx-auto"><p class="text-lg max-w-2xl mx-auto mb-6 text-white/90" data-testid="text-cta-description">Schedule your free inspection today and experience roofing done right.</p></div>								</div>
-				<div class="elementor-element elementor-element-3e18832 elementor-button-align-stretch elementor-widget elementor-widget-form" data-id="3e18832" data-element_type="widget" data-e-type="widget" data-settings="{&quot;step_next_label&quot;:&quot;Next&quot;,&quot;step_previous_label&quot;:&quot;Previous&quot;,&quot;button_width&quot;:&quot;100&quot;,&quot;step_type&quot;:&quot;number_text&quot;,&quot;step_icon_shape&quot;:&quot;circle&quot;}" data-widget_type="form.default">
-							<form class="elementor-form" method="post" name="New Form" aria-label="New Form">
+				<div class="elementor-element elementor-element-3e18832 elementor-button-align-stretch elementor-widget elementor-widget-form" data-id="3e18832" data-element_type="widget" data-e-type="widget" data-settings="{&quot;step_next_label&quot;:&quot;Next&quot;,&quot;step_previous_label&quot;:&quot;Previous&quot;,&quot;button_width&quot;:&quot;100&quot;,&quot;step_type&quot;:&quot;number_text&quot;,&quot;step_icon_shape&quot;:&quot;circle&quot;}" data-widget_type="form-static.default">
+							<form class="elementor-form" method="post" action="/_forms/submit.php" name="New Form" aria-label="New Form">
+			<input type="hidden" name="fit_page" value="/contact/"/>
+			<div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden"><label for="company_website-contact">Company website</label><input type="text" id="company_website-contact" name="company_website" value="" tabindex="-1" autocomplete="off"></div>
 			<input type="hidden" name="post_id" value="19"/>
 			<input type="hidden" name="form_id" value="3e18832"/>
 			<input type="hidden" name="referer_title" value="Contact | Fit Roofing &amp; Construction" />
@@ -208,7 +210,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 								<div class="elementor-field-type-tel elementor-field-group elementor-column elementor-field-group-field_e68902c elementor-col-50">
 												<label for="form-field-field_e68902c" class="elementor-field-label elementor-screen-only">
 								Phone							</label>
-								<input size="1" type="tel" name="form_fields[field_e68902c]" id="form-field-field_e68902c" class="elementor-field elementor-size-sm  elementor-field-textual" placeholder="Phone" pattern="[0-9()#&amp;+*-=.]+" title="Only numbers and phone characters (#, -, *, etc) are accepted.">
+								<input size="1" type="tel" name="form_fields[field_e68902c]" id="form-field-field_e68902c" class="elementor-field elementor-size-sm  elementor-field-textual" placeholder="Phone">
 
 						</div>
 								<div class="elementor-field-type-email elementor-field-group elementor-column elementor-field-group-email elementor-col-100 elementor-field-required">
@@ -473,5 +475,48 @@ var ElementorProFrontendConfig = {"ajaxurl":"\/wp-admin\/admin-ajax.php","nonce"
 <script id="elementor-pro-frontend-js" src="/wp-content/plugins/elementor-pro/assets/js/frontend.min.js?ver=4.1.2"></script>
 <script id="pro-elements-handlers-js" src="/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2"></script>
 
+<style id="fit-enquiry-style">
+/* Elementor's own .elementor-message is near-black text with an eicon glyph
+   before it. Both enquiry forms sit on a dark panel, so its success message
+   rendered as unreadable grey on brown with a tofu box in front of it - the
+   same "looks like a glitch" failure this rewiring exists to remove. */
+.elementor-message.fit-enquiry-note{display:block;margin:14px 0 0;padding:12px 16px;border-radius:6px;font-size:15px;line-height:1.5;text-align:left}
+.elementor-message.fit-enquiry-note:before{content:none;display:none}
+.elementor-message.fit-enquiry-note.elementor-message-success{background:#10361f;border:1px solid #3d8f5c;color:#e3f7ea}
+.elementor-message.fit-enquiry-note.elementor-message-danger{background:#3d1414;border:1px solid #b05050;color:#ffe4e4}
+.elementor-message.fit-enquiry-note a{color:inherit;text-decoration:underline}
+</style>
+<script id="fit-enquiry-status">
+/* Renders the outcome of an enquiry after /_forms/submit.php redirects back
+   here. Nothing on this page submits by script: the form does an ordinary
+   post, so this only decorates the result. */
+(function () {
+	if (!window.URLSearchParams || !window.history || !window.history.replaceState) { return; }
+	var params = new URLSearchParams(window.location.search);
+	var state = params.get('enquiry');
+	if (state !== 'sent' && state !== 'error') { return; }
+	var form = document.querySelector('form.elementor-form');
+	if (!form) { return; }
+	var box = document.createElement('div');
+	box.className = 'elementor-message fit-enquiry-note elementor-message-' + (state === 'sent' ? 'success' : 'danger');
+	box.setAttribute('role', 'alert');
+	if (state === 'sent') {
+		box.textContent = 'Thank you. Your message has been sent and we will be in touch shortly.';
+		form.reset();
+	} else {
+		box.appendChild(document.createTextNode('Sorry, your message could not be sent. Please '));
+		var link = document.createElement('a');
+		link.href = 'tel:+12147140071';
+		link.appendChild(document.createTextNode('call us'));
+		box.appendChild(link);
+		box.appendChild(document.createTextNode(' and we will take your details.'));
+	}
+	form.appendChild(box);
+	params.delete('enquiry');
+	var query = params.toString();
+	window.history.replaceState({}, '', window.location.pathname + (query ? '?' + query : '') + window.location.hash);
+	if (form.scrollIntoView) { form.scrollIntoView({ block: 'center' }); }
+}());
+</script>
 </body>
 </html>
