@@ -30,7 +30,13 @@
     "compare": "node tools/compare.mjs",
     "compare:mobile": "node tools/compare.mjs --mobile",
     "functions": "node tools/functions.mjs",
-    "textdiff": "node tools/textdiff.mjs"
+    "textdiff": "node tools/textdiff.mjs",
+    "motion": "node tools/inject-motion.mjs",
+    "motion:dry": "node tools/inject-motion.mjs --dry",
+    "motion:remove": "node tools/inject-motion.mjs --remove",
+    "motion:qa": "node tools/motion-qa.mjs",
+    "motion:qa:keys": "node tools/motion-a11y.mjs",
+    "motion:qa:portfolio": "node tools/motion-qa-portfolio.mjs"
   },
   "devDependencies": {
     "playwright-core": "^1.62.1"

@@ -7,15 +7,22 @@ The point of the copy is control: the same pages, at the same URLs, as plain HTM
 titles, headings, internal linking, schema and page structure can be changed directly instead
 of through a page builder.
 
-**Nothing has been redesigned or rewritten.** The capture is faithful, including the things
-that are wrong on the live site. The lead forms render and validate but do not submit anywhere
-yet — that is deliberate and deferred, see below.
+**The mirrored markup has not been rewritten, with one exception.** The capture is faithful,
+including the things that are wrong on the live site. What has been added on top of it is a
+**motion layer** — scroll reveals, hover polish, a roofline page transition, a parallax hero
+and a click-to-enter gate on the homepage — as a handful of files and a tag-injection script
+that can strip itself out again. The exception is **`/portfolio/`**, whose page body was
+rebuilt by hand from a supplied template, on the company's real photographs and copy. See
+**[MOTION.md](MOTION.md)** for both. The lead forms render and validate but do not submit
+anywhere yet — that is deliberate and deferred, see below.
 
 ## Start here
 
 - **[MIRROR.md](MIRROR.md)** — what was captured, the only changes made to it, how it was
   verified (including the page-by-page scroll-through review), what the new host needs
   configuring, and the honest list of what a static copy cannot do.
+- **[MOTION.md](MOTION.md)** — the motion layer: what each file does, how it is wired in and
+  out, what was verified in a browser, and the four things the client should decide on.
 - **[_redirects](_redirects)** — the redirects the live site already answers, carried across
   so every URL that works today keeps working.
 - **[routes.txt](routes.txt)** — the 48 URLs that make up the site (45 pages and 3 sitemaps).
@@ -49,10 +56,17 @@ npm run interactions   # clicks: accordions, reviews controls, video, anchors, f
 npm run interactions:mobile
 npm run functions      # older, faster check of menus, carousels and accordions
 npm run forms          # inventory of every form: fields, required flags, pages
+npm run motion         # inject the motion layer's tags into every page (idempotent)
+npm run motion:dry     #   report what would change
+npm run motion:remove  #   strip them — pages return byte for byte to the capture
 ```
 
-Everything except `test`, `verify`, `parity` and `forms` needs `npm run serve` running in
-another terminal. **On Windows, run the page tools from PowerShell** — Git Bash rewrites a
+**`parity`, `compare` and `scroll` compare against the live site and now report every page
+as different, because the motion layer is meant to differ.** To re-verify a capture against
+live, run `npm run motion:remove` first and `npm run motion` afterwards.
+
+Everything except `test`, `verify`, `parity`, `forms` and `motion` needs `npm run serve`
+running in another terminal. **On Windows, run the page tools from PowerShell** — Git Bash rewrites a
 route argument like `/` into `C:/Program Files/Git/`.
 
 Every browser tool aborts analytics beacons on both sides (`tools/browser.mjs`), so checks do

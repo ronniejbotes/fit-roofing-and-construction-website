@@ -79,6 +79,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="icon" href="/wp-content/uploads/2026/03/cropped-Gold-house-roof-and-windows-icon-1-192x192.png" sizes="192x192" />
 <link rel="apple-touch-icon" href="/wp-content/uploads/2026/03/cropped-Gold-house-roof-and-windows-icon-1-180x180.png" />
 <meta name="msapplication-TileImage" content="/wp-content/uploads/2026/03/cropped-Gold-house-roof-and-windows-icon-1-270x270.png" />
+<script data-fit-motion>(function(){try{var s=sessionStorage,k='fit-nav',v=s.getItem(k);s.removeItem(k);if(v==='1'&&!(matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))document.documentElement.classList.add('fit-arriving')}catch(e){}})()</script>
+<link rel="stylesheet" href="/assets/fit-motion.css" data-fit-motion>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/kanit-900-latin.woff2" crossorigin data-fit-motion>
+<link rel="stylesheet" href="/assets/fit-portfolio.css" data-fit-motion>
 </head>
 <body class="wp-singular page-template page-template-elementor_header_footer page page-id-404 wp-custom-logo wp-embed-responsive wp-theme-hello-elementor hello-elementor-default elementor-default elementor-template-full-width elementor-kit-6 elementor-page elementor-page-404">
 
@@ -167,122 +171,232 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 					</div>
 				</div>
 				</header>
-				<div data-elementor-type="wp-page" data-elementor-id="404" class="elementor elementor-404" data-elementor-post-type="page">
-				<div class="elementor-element elementor-element-7f96697 e-flex e-con-boxed e-con e-parent" data-id="7f96697" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
-					<div class="e-con-inner">
-				<div class="elementor-element elementor-element-7f69e4f elementor-invisible elementor-widget elementor-widget-heading" data-id="7f69e4f" data-element_type="widget" data-e-type="widget" data-settings="{&quot;_animation&quot;:&quot;fadeInUp&quot;}" data-widget_type="heading.default">
-					<h1 class="elementor-heading-title elementor-size-default">Portfolio</h1>				</div>
-				<div class="elementor-element elementor-element-6e16d32 elementor-widget__width-initial elementor-invisible elementor-widget elementor-widget-text-editor" data-id="6e16d32" data-element_type="widget" data-e-type="widget" data-settings="{&quot;_animation&quot;:&quot;fadeIn&quot;}" data-widget_type="text-editor.default">
-									<div class="flex flex-col text-sm pb-25"><section class="text-token-text-primary w-full focus:outline-none [--shadow-height:45px] has-data-writing-block:pointer-events-none has-data-writing-block:-mt-(--shadow-height) has-data-writing-block:pt-(--shadow-height) [&amp;:has([data-writing-block])&gt;*]:pointer-events-auto scroll-mt-[calc(var(--header-height)+min(200px,max(70px,20svh)))]" dir="auto" data-turn-id="2d7b3259-3b32-45b6-8c70-e6dcaab523cc" data-testid="conversation-turn-28" data-scroll-anchor="true" data-turn="assistant"><div class="text-base my-auto mx-auto pb-10 [--thread-content-margin:var(--thread-content-margin-xs,calc(var(--spacing)*4))] @w-sm/main:[--thread-content-margin:var(--thread-content-margin-sm,calc(var(--spacing)*6))] @w-lg/main:[--thread-content-margin:var(--thread-content-margin-lg,calc(var(--spacing)*16))] px-(--thread-content-margin)"><div class="[--thread-content-max-width:40rem] @w-lg/main:[--thread-content-max-width:48rem] mx-auto max-w-(--thread-content-max-width) flex-1 group/turn-messages focus-visible:outline-hidden relative flex w-full min-w-0 flex-col agent-turn"><div class="flex max-w-full flex-col gap-4 grow"><div class="min-h-8 text-message relative flex w-full flex-col items-end gap-2 text-start break-words whitespace-normal outline-none keyboard-focused:focus-ring [.text-message+&amp;]:mt-1" dir="auto" tabindex="0" data-message-author-role="assistant" data-message-id="2d7b3259-3b32-45b6-8c70-e6dcaab523cc" data-turn-start-message="true" data-message-model-slug="gpt-5-3"><div class="flex w-full flex-col gap-1 empty:hidden"><div class="markdown prose dark:prose-invert w-full wrap-break-word dark markdown-new-styling"><p data-start="0" data-end="196" data-is-last-node="" data-is-only-node="">Explore our portfolio of completed roofing projects, showcasing quality craftsmanship, durable materials, and reliable results across residential and commercial properties we’ve proudly worked on.</p></div></div></div></div></div></div></section></div>								</div>
-		<div class="elementor-element elementor-element-f262a1f e-con-full e-flex e-con e-child" data-id="f262a1f" data-element_type="container" data-e-type="container">
-				<div class="elementor-element elementor-element-64ecd24 elementor-align-center elementor-widget elementor-widget-button" data-id="64ecd24" data-element_type="widget" data-e-type="widget" data-widget_type="button.default">
-										<a class="elementor-button elementor-button-link elementor-size-sm" href="/contact">
-						<span class="elementor-button-content-wrapper">
-									<span class="elementor-button-text">Get a Free Inspection</span>
-					</span>
-					</a>
-								</div>
-				<div class="elementor-element elementor-element-b049208 elementor-align-center frosted-btn elementor-widget elementor-widget-button" data-id="b049208" data-element_type="widget" data-e-type="widget" data-widget_type="button.default">
-										<a class="elementor-button elementor-button-link elementor-size-sm" href="/about">
-						<span class="elementor-button-content-wrapper">
-									<span class="elementor-button-text">Learn More</span>
-					</span>
-					</a>
-								</div>
+				<main id="content" class="fp" data-fp-page="portfolio">
+
+	<!-- 1. Hero -->
+	<section class="fp-hero" aria-label="Our work">
+		<nav class="fp-nav" aria-label="On this page" data-fp-fade data-fp-y="-20" data-fp-delay="0">
+			<a href="#fp-about">Founder</a>
+			<a href="#fp-services">Services</a>
+			<a href="#fp-projects">Projects</a>
+			<a href="/contact/">Free inspection</a>
+		</nav>
+		<div class="fp-hero__title-wrap" data-fp-fade data-fp-y="40" data-fp-delay="0.15">
+			<h1 class="fp-display fp-gradient fp-hero__title">Our Work</h1>
+		</div>
+		<div class="fp-hero__portrait">
+			<div data-fp-fade data-fp-y="30" data-fp-delay="0.6">
+				<div class="fp-magnet" data-fp-magnet data-fp-padding="150" data-fp-strength="3">
+					<img src="/wp-content/uploads/2026/07/fit-roofing-owner-neno-remove-background.webp" width="460" height="542" alt="Michael Cesar, founder of F.I.T. Roofing &amp; Construction" fetchpriority="high" decoding="async">
 				</div>
-					</div>
+			</div>
+		</div>
+		<div class="fp-hero__bar">
+			<p class="fp-hero__lede" data-fp-fade data-fp-y="20" data-fp-delay="0.35">Real jobs, photographed from the air &mdash; from dry-in to finished roof.</p>
+			<div data-fp-fade data-fp-y="20" data-fp-delay="0.5"><a class="fp-btn fp-btn--primary" href="/contact/">Get a Free Inspection</a></div>
+		</div>
+	</section>
+
+	<!-- 2. Marquee — two rows of real jobs, moved by the page scroll. The
+	     second copy of each row only fills ultra-wide screens and is hidden
+	     from assistive technology. -->
+	<section class="fp-marquee" aria-label="Our jobs">
+		<div class="fp-marquee__row" data-fp-row="1">
+			<img class="fp-marquee__tile" src="/assets/portfolio/photo-01-900.webp" width="900" height="506" alt="Aerial view of an aged tile roof before work begins" loading="eager" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-b-4-900.webp" width="900" height="506" alt="Drone view of a finished dark-shingle roof over a brick single-story home" loading="eager" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/photo-02-900.webp" width="900" height="506" alt="Crew laying underlayment on a large single-story roof, materials staged on the driveway" loading="eager" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-a-9-900.webp" width="900" height="506" alt="Top-down drone view of a tile roof mid-job" loading="eager" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/photo-03-900.webp" width="900" height="506" alt="Aerial view of a brick home with the roof dried in and shingle bundles staged along the ridge" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-b-12-900.webp" width="900" height="506" alt="Drone view of a finished shingle roof and patio cover from above the backyard" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/photo-04-900.webp" width="900" height="506" alt="Aerial view of a single-story brick home under black synthetic underlayment, shingle bundles staged across the deck" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-a-15-900.webp" width="900" height="506" alt="Drone view of a tile roof with new courses going down" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/photo-01-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-b-4-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/photo-02-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-a-9-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/photo-03-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-b-12-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/photo-04-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-a-15-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+		</div>
+		<div class="fp-marquee__row" data-fp-row="2">
+			<img class="fp-marquee__tile" src="/assets/portfolio/photo-05-900.webp" width="900" height="506" alt="Aerial view of a tile roof being laid over new white underlayment, tiles stacked in rows" loading="eager" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-b-20-900.webp" width="900" height="506" alt="Drone view of a finished roof, chimney and backyard" loading="eager" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/photo-06-900.webp" width="900" height="506" alt="Top-down drone view of a completed architectural shingle roof with the last bundles on deck" loading="eager" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-a-21-900.webp" width="900" height="506" alt="Drone view of a tile roof mid-job from the street side" loading="eager" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/photo-07-900.webp" width="900" height="506" alt="Aerial view of a large two-story brick home with synthetic underlayment going down across the roof" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-b-27-900.webp" width="900" height="506" alt="Drone view of a finished shingle roof from above the front lawn" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-a-3-900.webp" width="900" height="506" alt="Close aerial view of tile courses" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/photo-05-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-b-20-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/photo-06-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-a-21-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/photo-07-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-b-27-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+			<img class="fp-marquee__tile" src="/assets/portfolio/still-a-3-900.webp" width="900" height="506" alt="" aria-hidden="true" loading="lazy" decoding="async">
+		</div>
+	</section>
+
+	<!-- 3. About — the founder's own words (from the homepage), revealed
+	     character by character as you read. -->
+	<section id="fp-about" class="fp-about" aria-labelledby="fp-about-title">
+		<div class="fp-about__deco-wrap" aria-hidden="true">
+			<div class="fp-about__deco fp-about__deco--tl"><div data-fp-fade data-fp-x="-80" data-fp-y="0" data-fp-delay="0.1" data-fp-duration="0.9"><img src="/assets/portfolio/still-b-20-480.webp" width="480" height="270" alt="" loading="lazy" decoding="async"></div></div>
+			<div class="fp-about__deco fp-about__deco--bl"><div data-fp-fade data-fp-x="-80" data-fp-y="0" data-fp-delay="0.25" data-fp-duration="0.9"><img src="/assets/portfolio/photo-06-480.webp" width="480" height="270" alt="" loading="lazy" decoding="async"></div></div>
+			<div class="fp-about__deco fp-about__deco--tr"><div data-fp-fade data-fp-x="80" data-fp-y="0" data-fp-delay="0.15" data-fp-duration="0.9"><img src="/assets/portfolio/still-a-21-480.webp" width="480" height="270" alt="" loading="lazy" decoding="async"></div></div>
+			<div class="fp-about__deco fp-about__deco--br"><div data-fp-fade data-fp-x="80" data-fp-y="0" data-fp-delay="0.3" data-fp-duration="0.9"><img src="/assets/portfolio/photo-04-480.webp" width="480" height="270" alt="" loading="lazy" decoding="async"></div></div>
+		</div>
+		<h2 id="fp-about-title" class="fp-display fp-gradient fp-about__title" data-fp-fade data-fp-y="40" data-fp-delay="0">Built the F.I.T. way</h2>
+		<div class="fp-about__body">
+			<p class="fp-about__text" data-fp-chars>&ldquo;I founded this company on one simple believe that your word means everything. We show up, communicate honestly, stand behind our work, and treat every home with the same care and respect we&rsquo;d give our own. My goal has always been to build more than quality roofs. I want to build lasting trust, strong relationships, and a company homeowners can confidently recommend.&rdquo;</p>
+			<p class="fp-about__cite">Michael Cesar, Founder</p>
+		</div>
+		<div class="fp-about__cta" data-fp-fade data-fp-y="20" data-fp-delay="0.1"><a class="fp-btn fp-btn--primary" href="/contact/">Get a Free Inspection</a></div>
+	</section>
+
+	<!-- 4. Services — each line is the opening sentence of that service's own page. -->
+	<section id="fp-services" class="fp-services" aria-labelledby="fp-services-title">
+		<h2 id="fp-services-title" class="fp-display fp-services__title" data-fp-fade data-fp-y="40" data-fp-delay="0">Services</h2>
+		<ol class="fp-services__list" role="list">
+			<li class="fp-service" data-fp-fade data-fp-y="30" data-fp-delay="0">
+				<span class="fp-service__num" aria-hidden="true">01</span>
+				<div class="fp-service__body">
+					<h3 class="fp-service__name"><a href="/roof-replacement-texas/">Roof Replacement</a></h3>
+					<p class="fp-service__desc">Expert roof replacement services delivering durable, high-quality roofing systems designed to withstand Texas heat, storms, and long-term wear while improving protection, energy efficiency, and overall property value.</p>
 				</div>
-		<div class="elementor-element elementor-element-7e9c369 e-con-full e-flex e-con e-parent" data-id="7e9c369" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
-		<div class="elementor-element elementor-element-5111d03 e-grid e-con-full e-con e-child" data-id="5111d03" data-element_type="container" data-e-type="container">
-		<div class="elementor-element elementor-element-5f2e8ad e-con-full e-flex elementor-invisible e-con e-child" data-id="5f2e8ad" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;,&quot;animation&quot;:&quot;fadeIn&quot;}">
+			</li>
+			<li class="fp-service" data-fp-fade data-fp-y="30" data-fp-delay="0.1">
+				<span class="fp-service__num" aria-hidden="true">02</span>
+				<div class="fp-service__body">
+					<h3 class="fp-service__name"><a href="/roof-repair-texas/">Roof Repair</a></h3>
+					<p class="fp-service__desc">Reliable roof repair services designed to fix leaks, storm damage, and structural issues quickly while restoring strength, extending lifespan, and protecting your Texas property from further damage.</p>
 				</div>
-		<div class="elementor-element elementor-element-e87204a e-con-full e-flex elementor-invisible e-con e-child" data-id="e87204a" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;,&quot;animation&quot;:&quot;fadeIn&quot;}">
+			</li>
+			<li class="fp-service" data-fp-fade data-fp-y="30" data-fp-delay="0.2">
+				<span class="fp-service__num" aria-hidden="true">03</span>
+				<div class="fp-service__body">
+					<h3 class="fp-service__name"><a href="/storm-repair-texas/">Storm Repair</a></h3>
+					<p class="fp-service__desc">Fast and reliable storm repair services restoring roofs damaged by hail, wind, and severe weather while protecting your property, preventing further damage, and ensuring long-term performance in Texas conditions.</p>
 				</div>
-		<div class="elementor-element elementor-element-206aefc e-con-full e-flex elementor-invisible e-con e-child" data-id="206aefc" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;,&quot;animation&quot;:&quot;fadeIn&quot;}">
+			</li>
+			<li class="fp-service" data-fp-fade data-fp-y="30" data-fp-delay="0.3">
+				<span class="fp-service__num" aria-hidden="true">04</span>
+				<div class="fp-service__body">
+					<h3 class="fp-service__name"><a href="/gutter-installation-texas/">Gutter Installation</a></h3>
+					<p class="fp-service__desc">Professional gutter installation services designed to protect your home from water damage by directing rainwater efficiently while improving drainage, preventing foundation issues, and ensuring long-term performance in Texas weather conditions.</p>
 				</div>
-		<div class="elementor-element elementor-element-bffb77a e-con-full e-flex elementor-invisible e-con e-child" data-id="bffb77a" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;,&quot;animation&quot;:&quot;fadeIn&quot;}">
+			</li>
+			<li class="fp-service" data-fp-fade data-fp-y="30" data-fp-delay="0.4">
+				<span class="fp-service__num" aria-hidden="true">05</span>
+				<div class="fp-service__body">
+					<h3 class="fp-service__name"><a href="/roof-installation-texas/">Roof Installation</a></h3>
+					<p class="fp-service__desc">Expert roof installation services delivering durable, high-quality roofing systems designed to withstand Texas weather while improving protection, efficiency, and long-term value for residential and commercial properties.</p>
 				</div>
+			</li>
+			<li class="fp-service" data-fp-fade data-fp-y="30" data-fp-delay="0.5">
+				<span class="fp-service__num" aria-hidden="true">06</span>
+				<div class="fp-service__body">
+					<h3 class="fp-service__name"><a href="/skylight-installation-texas/">Skylights</a></h3>
+					<p class="fp-service__desc">Professional skylight installation services designed to bring natural light into your home while improving energy efficiency, enhancing interior spaces, and providing leak-resistant performance built for Texas weather conditions.</p>
 				</div>
-		<div class="elementor-element elementor-element-8a267a8 e-grid e-con-full elementor-invisible e-con e-child" data-id="8a267a8" data-element_type="container" data-e-type="container" data-settings="{&quot;animation&quot;:&quot;fadeInUp&quot;}">
-		<div class="elementor-element elementor-element-e7a3b47 e-con-full e-flex e-con e-child" data-id="e7a3b47" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+			</li>
+			<li class="fp-service" data-fp-fade data-fp-y="30" data-fp-delay="0.6">
+				<span class="fp-service__num" aria-hidden="true">07</span>
+				<div class="fp-service__body">
+					<h3 class="fp-service__name"><a href="/attics-texas/">Attics</a></h3>
+					<p class="fp-service__desc">Expert attic services designed to improve ventilation, insulation, and energy efficiency while protecting your home from heat buildup, moisture issues, and long-term structural damage in Texas conditions.</p>
 				</div>
-		<div class="elementor-element elementor-element-3d2a3c1 e-con-full e-flex e-con e-child" data-id="3d2a3c1" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
+			</li>
+			<li class="fp-service" data-fp-fade data-fp-y="30" data-fp-delay="0.7">
+				<span class="fp-service__num" aria-hidden="true">08</span>
+				<div class="fp-service__body">
+					<h3 class="fp-service__name"><a href="/commercial-roofing-texas/">Commercial Roofing</a></h3>
+					<p class="fp-service__desc">Reliable commercial roofing solutions designed for durability, performance, and long-term protection, helping Texas businesses safeguard their properties with high-quality materials and expert installation built for demanding conditions.</p>
 				</div>
-		<div class="elementor-element elementor-element-c29d1f1 e-con-full e-flex e-con e-child" data-id="c29d1f1" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
-				</div>
-		<div class="elementor-element elementor-element-1d1be61 e-con-full e-flex e-con e-child" data-id="1d1be61" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
-				</div>
-				</div>
-		<div class="elementor-element elementor-element-f3dc1d2 e-grid e-con-full elementor-invisible e-con e-child" data-id="f3dc1d2" data-element_type="container" data-e-type="container" data-settings="{&quot;animation&quot;:&quot;fadeInUp&quot;}">
-		<div class="elementor-element elementor-element-e17b37e e-con-full e-flex e-con e-child" data-id="e17b37e" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
-				</div>
-		<div class="elementor-element elementor-element-12f5f3a e-con-full e-flex e-con e-child" data-id="12f5f3a" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
-				</div>
-		<div class="elementor-element elementor-element-abb7a32 e-con-full e-flex e-con e-child" data-id="abb7a32" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
-				</div>
-				</div>
-				</div>
-		<div class="elementor-element elementor-element-8421461 e-flex e-con-boxed e-con e-parent" data-id="8421461" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
-					<div class="e-con-inner">
-		<div class="elementor-element elementor-element-8a16dcc e-grid e-con-full e-con e-child" data-id="8a16dcc" data-element_type="container" data-e-type="container">
-				<div class="elementor-element elementor-element-4396731 elementor-widget elementor-widget-video" data-id="4396731" data-element_type="widget" data-e-type="widget" data-settings="{&quot;video_type&quot;:&quot;hosted&quot;,&quot;controls&quot;:&quot;yes&quot;}" data-widget_type="video.default">
-							<div class="e-hosted-video elementor-wrapper elementor-open-inline">
-					<video class="elementor-video" src="/wp-content/uploads/2026/03/Copy-of-dji_fly_20260226_140938_832_1772133040484_quickshot.mov" controls="" preload="metadata" controlsList="nodownload"></video>
-				</div>
+			</li>
+		</ol>
+	</section>
+
+	<!-- 5. Projects — three stages of real jobs, as sticky cards that stack.
+	     Titled by what the photographs show; no client names, no addresses. -->
+	<section id="fp-projects" class="fp-projects" aria-labelledby="fp-projects-title">
+		<h2 id="fp-projects-title" class="fp-display fp-gradient fp-projects__title" data-fp-fade data-fp-y="40" data-fp-delay="0">Projects</h2>
+		<div class="fp-stack">
+			<div class="fp-stack__slot">
+				<article class="fp-card" aria-labelledby="fp-p1">
+					<div class="fp-card__head">
+						<span class="fp-card__num" aria-hidden="true">01</span>
+						<div class="fp-card__meta">
+							<p class="fp-card__cat">Residential</p>
+							<h3 id="fp-p1" class="fp-card__name">Dried in, ready for shingles</h3>
 						</div>
-		<div class="elementor-element elementor-element-9e8d3ed e-con-full e-flex e-con e-child" data-id="9e8d3ed" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
-				<div class="elementor-element elementor-element-b2d2b5f elementor-widget elementor-widget-heading" data-id="b2d2b5f" data-element_type="widget" data-e-type="widget" data-widget_type="heading.default">
-					<h3 class="elementor-heading-title elementor-size-default">Reliable Roofing You Can Count On</h3>				</div>
-				<div class="elementor-element elementor-element-d6f7138 elementor-widget elementor-widget-text-editor" data-id="d6f7138" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
-									<div class="text-base my-auto mx-auto [--thread-content-margin:var(--thread-content-margin-xs,calc(var(--spacing)*4))] @w-sm/main:[--thread-content-margin:var(--thread-content-margin-sm,calc(var(--spacing)*6))] @w-lg/main:[--thread-content-margin:var(--thread-content-margin-lg,calc(var(--spacing)*16))] px-(--thread-content-margin)"><div class="[--thread-content-max-width:40rem] @w-lg/main:[--thread-content-max-width:48rem] mx-auto max-w-(--thread-content-max-width) flex-1 group/turn-messages focus-visible:outline-hidden relative flex w-full min-w-0 flex-col agent-turn"><div class="flex max-w-full flex-col gap-4 grow"><div class="min-h-8 text-message relative flex w-full flex-col items-end gap-2 text-start break-words whitespace-normal outline-none keyboard-focused:focus-ring [.text-message+&amp;]:mt-1" dir="auto" data-message-author-role="assistant" data-message-id="94d7f061-b5bb-4795-a1d1-246ad6bfb8af" data-message-model-slug="gpt-5-3"><div class="flex w-full flex-col gap-1 empty:hidden"><div class="markdown prose dark:prose-invert w-full wrap-break-word dark markdown-new-styling"><p data-start="299" data-end="472" data-is-last-node="" data-is-only-node="">From repairs to full roof replacements, FIT Roofing delivers durable, high-quality solutions designed to protect your property and stand the test of time.</p></div></div></div></div></div></div>								</div>
-		<div class="elementor-element elementor-element-23270f2 e-con-full e-flex e-con e-child" data-id="23270f2" data-element_type="container" data-e-type="container">
-				<div class="elementor-element elementor-element-3ab7786 elementor-align-center elementor-widget elementor-widget-button" data-id="3ab7786" data-element_type="widget" data-e-type="widget" data-widget_type="button.default">
-										<a class="elementor-button elementor-button-link elementor-size-sm" href="/contact">
-						<span class="elementor-button-content-wrapper">
-									<span class="elementor-button-text">Get a Free Inspection</span>
-					</span>
-					</a>
-								</div>
-				<div class="elementor-element elementor-element-4d811f6 elementor-align-center frosted-btn elementor-widget elementor-widget-button" data-id="4d811f6" data-element_type="widget" data-e-type="widget" data-widget_type="button.default">
-										<a class="elementor-button elementor-button-link elementor-size-sm" href="/about">
-						<span class="elementor-button-content-wrapper">
-									<span class="elementor-button-text">Learn More</span>
-					</span>
-					</a>
-								</div>
-				</div>
-				</div>
-				</div>
-		<div class="elementor-element elementor-element-6b62bde e-grid e-con-full e-con e-child" data-id="6b62bde" data-element_type="container" data-e-type="container">
-		<div class="elementor-element elementor-element-a92273e e-con-full e-flex e-con e-child" data-id="a92273e" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
-				<div class="elementor-element elementor-element-e1f2d07 elementor-widget elementor-widget-heading" data-id="e1f2d07" data-element_type="widget" data-e-type="widget" data-widget_type="heading.default">
-					<h3 class="elementor-heading-title elementor-size-default">Need roof repairs? Let’s fix it fast.</h3>				</div>
-				</div>
-				<div class="elementor-element elementor-element-041e8f8 elementor-widget elementor-widget-video" data-id="041e8f8" data-element_type="widget" data-e-type="widget" data-settings="{&quot;video_type&quot;:&quot;hosted&quot;,&quot;controls&quot;:&quot;yes&quot;}" data-widget_type="video.default">
-							<div class="e-hosted-video elementor-wrapper elementor-open-inline">
-					<video class="elementor-video" src="/wp-content/uploads/2026/03/Copy-of-158684351_100DRONE_NORM0190.mp4" controls="" preload="metadata" controlsList="nodownload"></video>
-				</div>
+						<a class="fp-btn fp-btn--ghost fp-card__cta" href="/roof-replacement-texas/">Roof replacement</a>
+					</div>
+					<div class="fp-card__grid">
+						<div class="fp-card__col1">
+							<img class="fp-card__media" src="/assets/portfolio/photo-07-detail-1-900.webp" width="900" height="506" alt="Detail: the crew at the ridge of the same roof, shingle bundles staged on the underlayment" loading="lazy" decoding="async">
+							<img class="fp-card__media" src="/assets/portfolio/photo-07-detail-2-900.webp" width="900" height="506" alt="Detail: the dormers and front of the same house under synthetic underlayment" loading="lazy" decoding="async">
 						</div>
-				</div>
+						<div class="fp-card__col2">
+							<img class="fp-card__media" src="/assets/portfolio/photo-07-1600.webp" width="1600" height="900" alt="Aerial view of a large two-story brick home with synthetic underlayment going down across the roof" loading="lazy" decoding="async">
+						</div>
 					</div>
-				</div>
-		<div class="elementor-element elementor-element-ff8da77 e-flex e-con-boxed e-con e-parent" data-id="ff8da77" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
-					<div class="e-con-inner">
-				<div class="elementor-element elementor-element-35ebf65 elementor-widget elementor-widget-heading" data-id="35ebf65" data-element_type="widget" data-e-type="widget" data-widget_type="heading.default">
-					<h2 class="elementor-heading-title elementor-size-default">Ready to Get Started?
-</h2>				</div>
-				<div class="elementor-element elementor-element-085d654 elementor-widget__width-initial elementor-widget elementor-widget-text-editor" data-id="085d654" data-element_type="widget" data-e-type="widget" data-widget_type="text-editor.default">
-									<div class="text-center mb-10 max-w-3xl mx-auto"><p class="text-lg max-w-2xl mx-auto mb-6 text-white/90" data-testid="text-cta-description">Schedule your free inspection today and experience roofing done right.</p></div>								</div>
-				<div class="elementor-element elementor-element-a0f69c9 elementor-widget elementor-widget-button" data-id="a0f69c9" data-element_type="widget" data-e-type="widget" data-widget_type="button.default">
-										<a class="elementor-button elementor-button-link elementor-size-sm" href="/roofing-services-texas/">
-						<span class="elementor-button-content-wrapper">
-									<span class="elementor-button-text">Get Your Free Inspection</span>
-					</span>
-					</a>
-								</div>
+				</article>
+			</div>
+			<div class="fp-stack__slot">
+				<article class="fp-card" aria-labelledby="fp-p2">
+					<div class="fp-card__head">
+						<span class="fp-card__num" aria-hidden="true">02</span>
+						<div class="fp-card__meta">
+							<p class="fp-card__cat">Residential</p>
+							<h3 id="fp-p2" class="fp-card__name">Tile roof, new courses going down</h3>
+						</div>
+						<a class="fp-btn fp-btn--ghost fp-card__cta" href="/roof-replacement-texas/">Roof replacement</a>
 					</div>
-				</div>
-				</div>
+					<div class="fp-card__grid">
+						<div class="fp-card__col1">
+							<img class="fp-card__media" src="/assets/portfolio/photo-01-900.webp" width="900" height="506" alt="Aerial view of an aged tile roof before work begins" loading="lazy" decoding="async">
+							<img class="fp-card__media" src="/assets/portfolio/still-a-9-900.webp" width="900" height="506" alt="Top-down drone view of a tile roof mid-job" loading="lazy" decoding="async">
+						</div>
+						<div class="fp-card__col2">
+							<img class="fp-card__media" src="/assets/portfolio/photo-05-1600.webp" width="1600" height="900" alt="Aerial view of a tile roof being laid over new white underlayment, tiles stacked in rows" loading="lazy" decoding="async">
+						</div>
+					</div>
+				</article>
+			</div>
+			<div class="fp-stack__slot">
+				<article class="fp-card" aria-labelledby="fp-p3">
+					<div class="fp-card__head">
+						<span class="fp-card__num" aria-hidden="true">03</span>
+						<div class="fp-card__meta">
+							<p class="fp-card__cat">Residential</p>
+							<h3 id="fp-p3" class="fp-card__name">Finished roof, from above</h3>
+						</div>
+						<a class="fp-btn fp-btn--ghost fp-card__cta" href="/roof-inspection-texas/">Roof inspection</a>
+					</div>
+					<div class="fp-card__grid">
+						<div class="fp-card__col1">
+							<img class="fp-card__media" src="/assets/portfolio/still-b-12-900.webp" width="900" height="506" alt="Drone view of the finished shingle roof and patio cover from above the backyard" loading="lazy" decoding="async">
+							<img class="fp-card__media" src="/assets/portfolio/still-b-20-900.webp" width="900" height="506" alt="Drone view of the same finished roof, chimney and backyard" loading="lazy" decoding="async">
+						</div>
+						<div class="fp-card__col2">
+							<video class="fp-card__media" data-fp-video muted playsinline loop preload="metadata" poster="/assets/portfolio/finished-flyover-poster.webp" aria-label="Drone flyover of a finished shingle roof" width="960" height="540">
+								<source src="/assets/portfolio/finished-flyover.mp4" type="video/mp4">
+							</video>
+						</div>
+					</div>
+				</article>
+			</div>
+		</div>
+		<div class="fp-projects__cta" data-fp-fade data-fp-y="30" data-fp-delay="0">
+			<h2 class="fp-display fp-gradient fp-projects__cta-title">Ready to Get Started?</h2>
+			<p class="fp-projects__cta-text">Schedule your free inspection today and experience roofing done right.</p>
+			<a class="fp-btn fp-btn--primary" href="/contact/">Get Your Free Inspection</a>
+		</div>
+	</section>
+
+</main>
+
 				<footer data-elementor-type="footer" data-elementor-id="892" class="elementor elementor-892 elementor-location-footer" data-elementor-post-type="elementor_library">
 			<div class="elementor-element elementor-element-879a407 e-flex e-con-boxed e-con e-parent" data-id="879a407" data-element_type="container" data-e-type="container" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
 					<div class="e-con-inner">
@@ -456,5 +570,7 @@ var ElementorProFrontendConfig = {"ajaxurl":"\/wp-admin\/admin-ajax.php","nonce"
 <script id="elementor-pro-frontend-js" src="/wp-content/plugins/elementor-pro/assets/js/frontend.min.js?ver=4.1.2"></script>
 <script id="pro-elements-handlers-js" src="/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2"></script>
 
+<script src="/assets/fit-motion.js" defer data-fit-motion></script>
+<script src="/assets/fit-portfolio.js" defer data-fit-motion></script>
 </body>
 </html>

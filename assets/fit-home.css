@@ -1,0 +1,376 @@
+/*
+ * Fit Roofing — homepage bundle: the "Build it the F.I.T. way" gate, and the
+ * hero's owner portrait, glow and scroll cue. Loaded on / only.
+ *
+ * The gate is the same shape as the In The Light Roofing gate: you arrive on
+ * the first frame of the clip (a bare deck), choose to start, watch the roof
+ * go on, and are let through onto the page — whose hero photograph is the
+ * exact frame the clip ends on. Scroll is locked until then.
+ *
+ * Nothing darkens the footage. The clip is bright Texas daylight and the
+ * button takes its contrast from a solid ink capsule, not from dimming the
+ * picture behind it.
+ */
+
+/* ==========================================================================
+   1. The gate
+   ========================================================================== */
+#fit-build-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  /* The kit's ink, not white: on a slow connection this is what shows until
+     the poster arrives, and the whole site is dark. */
+  background: #1A1A1A;
+  opacity: 1;
+  transition: opacity .7s ease;
+}
+#fit-build-gate[data-state="done"] { opacity: 0; pointer-events: none; }
+#fit-build-gate:focus { outline: none; }
+
+#fit-build-gate .fit-gate-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+#fit-build-gate .fit-gate-video { opacity: 0; transition: opacity .35s ease; }
+#fit-build-gate[data-state="playing"] .fit-gate-video { opacity: 1; }
+#fit-build-gate[data-state="playing"] .fit-gate-poster {
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+
+#fit-build-gate .fit-gate-ui {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 24px;
+  text-align: center;
+  transition: opacity .3s ease;
+}
+#fit-build-gate[data-state="playing"] .fit-gate-ui {
+  opacity: 0;
+  pointer-events: none;
+}
+/* A soft bed under the words only — not a scrim over the footage. The
+   underlayment behind the button is pale and printed, and white lettering
+   needs somewhere quiet to sit. Fades to nothing well inside the frame. */
+#fit-build-gate .fit-gate-ui::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(92vw, 720px);
+  height: min(60vh, 340px);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(26, 26, 26, .42), rgba(26, 26, 26, .18) 55%, rgba(26, 26, 26, 0) 100%);
+  pointer-events: none;
+}
+#fit-build-gate .fit-gate-kicker,
+#fit-build-gate .fit-gate-btn { position: relative; }
+
+/* The three words in the logo, above the button — on a quiet ink chip so
+   they keep their contrast over the pale deck at the ends of the line. */
+#fit-build-gate .fit-gate-kicker {
+  margin: 0;
+  padding: 7px 15px;
+  border-radius: 999px;
+  background: rgba(26, 26, 26, .5);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: .26em;
+  text-indent: .26em; /* balances the trailing letter-spacing */
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(26, 26, 26, .5);
+}
+
+/* The capsule. `font: inherit` so it takes the Elementor kit's body face. */
+#fit-build-gate .fit-gate-btn {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  border: 0;
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .7em;
+  max-width: min(92vw, 520px);
+  padding: 18px 34px;
+  border-radius: 999px;
+
+  background-color: #1A1A1A;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  font-size: clamp(15px, 1.15vw + 10px, 19px);
+  line-height: 1.2;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, .28),
+    inset 0 1px 0 rgba(255, 255, 255, .12),
+    0 3px 6px rgba(26, 26, 26, .25),
+    0 18px 34px -12px rgba(26, 26, 26, .55),
+    0 40px 70px -28px rgba(26, 26, 26, .6);
+}
+#fit-build-gate .fit-gate-btn::after {
+  content: "";
+  flex: 0 0 auto;
+  width: .42em;
+  height: .42em;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(45deg);
+  margin-left: -.14em;
+  opacity: .9;
+}
+#fit-build-gate .fit-gate-btn:hover {
+  background-color: #826749; /* brand bronze */
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, .34),
+    inset 0 1px 0 rgba(255, 255, 255, .18),
+    0 3px 6px rgba(26, 26, 26, .25),
+    0 18px 34px -12px rgba(130, 103, 73, .6),
+    0 40px 70px -28px rgba(26, 26, 26, .6);
+}
+#fit-build-gate .fit-gate-btn:active { background-color: #6d563c; }
+#fit-build-gate .fit-gate-btn:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 4px;
+}
+
+@media (max-width: 480px) {
+  #fit-build-gate .fit-gate-btn {
+    letter-spacing: .1em;
+    gap: .55em;
+    padding: 15px 22px;
+    max-width: min(92vw, 360px);
+  }
+  #fit-build-gate .fit-gate-kicker { font-size: 11px; letter-spacing: .2em; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #fit-build-gate .fit-gate-btn {
+    transition:
+      transform .35s cubic-bezier(.22, .61, .36, 1),
+      background-color .25s ease,
+      box-shadow .35s cubic-bezier(.22, .61, .36, 1);
+  }
+  #fit-build-gate .fit-gate-btn::after {
+    transition: transform .35s cubic-bezier(.22, .61, .36, 1);
+    animation: fitGateNudge 4.2s ease-in-out infinite; /* quiet beckon, arrow only */
+  }
+  #fit-build-gate .fit-gate-btn:hover { transform: translateY(-2px); }
+  #fit-build-gate .fit-gate-btn:hover::after {
+    animation: none;
+    transform: rotate(45deg) translate(2px, -2px);
+  }
+  #fit-build-gate .fit-gate-btn:active { transform: translateY(0); }
+
+  /* The UI settles in rather than appearing with the poster. */
+  #fit-build-gate[data-state="closed"] .fit-gate-ui {
+    animation: fitGateIn .9s cubic-bezier(.22, .61, .36, 1) .2s both;
+  }
+}
+@keyframes fitGateNudge {
+  0%, 74%, 100% { transform: rotate(45deg) translate(0, 0); }
+  86%           { transform: rotate(45deg) translate(2.5px, -2.5px); }
+}
+@keyframes fitGateIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+#fit-build-gate .fit-gate-skip {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  border: 1px solid rgba(26, 26, 26, .18);
+  background: rgba(255, 255, 255, .94);
+  color: #1A1A1A;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 9px 16px;
+  border-radius: 999px;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+#fit-build-gate .fit-gate-skip:hover { background: #ffffff; border-color: rgba(26, 26, 26, .4); }
+#fit-build-gate .fit-gate-skip:focus-visible { outline: 3px solid #1A1A1A; outline-offset: 3px; }
+
+/* Scroll lock lives on the root while the gate is up. The script also blocks
+   wheel, touchmove and scroll keys, because overflow:hidden only removes the
+   scrollbar — on iOS a drag can still rubber-band the document behind a
+   fixed overlay. */
+html.fit-gate-open,
+html.fit-gate-open body {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
+/* Anything fixed that is not ours is hidden while the gate is up: the chat
+   launcher sits at the largest z-index a browser accepts, so the gate cannot
+   out-stack it and it would land on the Skip button. The script also marks
+   late-arriving fixed elements with data-fit-under-gate. */
+html.fit-gate-open [id*="fastbots" i],
+html.fit-gate-open [class*="fastbots" i],
+html.fit-gate-open iframe[src*="fastbots" i],
+html.fit-gate-open [data-fit-under-gate],
+html.fit-gate-open .fit-progress,
+html.fit-gate-open .fit-scroll-cue {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* ==========================================================================
+   2. The hero: the owner and the cue.
+   ========================================================================== */
+
+/* A warm bronze glow breathes behind the owner's portrait. Inserted behind
+   the image widget inside its own container; Elementor's fadeInLeft is on
+   the parent container, so nothing here fights it. */
+.fit-owner { position: relative; }
+/* Kept inside the container's own box — no width past 100%, no transform —
+   so it can never widen the page on a phone. */
+.fit-owner-glow {
+  position: absolute;
+  inset: 6% 0 0 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 62% 50% at 50% 58%, rgba(161, 128, 90, .62), rgba(161, 128, 90, .2) 55%, rgba(161, 128, 90, 0) 78%);
+  filter: blur(6px);
+}
+.fit-owner .elementor-widget-image {
+  position: relative;
+  z-index: 1;
+  transform: translate3d(0, var(--fit-owner-y, 0px), 0);
+  will-change: transform;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fit-owner-glow { animation: fitGlow 6.5s ease-in-out infinite alternate; }
+  .fit-owner .elementor-widget-image img { animation: fitFloat 7s ease-in-out infinite; }
+}
+@keyframes fitGlow {
+  from { opacity: .5; }
+  to   { opacity: 1; }
+}
+@keyframes fitFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+
+/* The headline draws a bronze rule beneath itself once Elementor's own
+   entrance has landed it. Time-based: it is above the fold on every visit. */
+.fit-h1 { position: relative; }
+.fit-h1::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -.28em;
+  width: 72px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #826749, #A1805A);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.fit-h1--center::after { left: 50%; margin-left: -36px; transform-origin: center; }
+@media (prefers-reduced-motion: no-preference) {
+  .fit-h1::after { animation: fitRuleIn .9s cubic-bezier(.22, .61, .36, 1) 1.15s both; }
+}
+@keyframes fitRuleIn { to { transform: scaleX(1); } }
+
+/* The cue at the foot of the hero: a small ring with a chevron that bobs,
+   gone once the visitor has scrolled. */
+.fit-scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  margin-left: -22px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, .6);
+  background: rgba(26, 26, 26, .28);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  text-decoration: none;
+  transition: opacity .4s ease, transform .4s ease, background-color .3s ease, border-color .3s ease, visibility 0s linear 0s;
+}
+/* The headline takes focus when the gate lets the visitor through; a ring
+   around a heading nobody clicked would only confuse. */
+.fit-focus-target:focus { outline: none; }
+.fit-scroll-cue::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translate(-2px, -2px);
+}
+.fit-scroll-cue:hover,
+.fit-scroll-cue:focus-visible {
+  background: #826749;
+  border-color: #826749;
+  color: #ffffff;
+}
+.fit-scroll-cue:focus-visible { outline: 2px solid #ffffff; outline-offset: 3px; }
+html.fit-scrolled .fit-scroll-cue {
+  opacity: 0;
+  visibility: hidden; /* out of the tab order once it has faded */
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity .4s ease, transform .4s ease, visibility 0s linear .4s;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fit-scroll-cue::after { animation: fitCueBob 2.2s ease-in-out infinite; }
+}
+@keyframes fitCueBob {
+  0%, 100% { transform: rotate(45deg) translate(-2px, -2px); }
+  50%      { transform: rotate(45deg) translate(1px, 1px); }
+}
+@media (max-width: 767px) {
+  .fit-scroll-cue { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fit-owner-glow, .fit-owner .elementor-widget-image, .fit-owner .elementor-widget-image img,
+  .fit-h1::after {
+    animation: none !important;
+    transform: none !important;
+  }
+  .fit-h1::after { transform: scaleX(1) !important; }
+  /* The chevron keeps its rotation; only the bob goes. */
+  .fit-scroll-cue::after { animation: none !important; }
+}

@@ -1,0 +1,638 @@
+/*
+ * Fit Roofing — /portfolio/
+ *
+ * A dark, photo-led showcase of real jobs, built to a supplied template
+ * (hero with a massive gradient headline and a magnet portrait; a two-row
+ * scroll-driven marquee; an "about" block that reveals character by
+ * character; a light, rounded numbered services list; three sticky-stacking
+ * project cards). Ported to plain CSS + a classic script — see
+ * assets/fit-portfolio.js — in the same way the rest of the motion layer is.
+ *
+ * Everything is scoped under main.fp so the mirrored header and footer
+ * around it are untouched. Kanit is self-hosted (assets/fonts). The palette
+ * is the site's own: bronze #826749, copper #A1805A on near-black.
+ */
+
+@font-face { font-family: 'Kanit'; font-style: normal; font-weight: 300; font-display: swap; src: url('/assets/fonts/kanit-300-latin.woff2') format('woff2'); }
+@font-face { font-family: 'Kanit'; font-style: normal; font-weight: 500; font-display: swap; src: url('/assets/fonts/kanit-500-latin.woff2') format('woff2'); }
+@font-face { font-family: 'Kanit'; font-style: normal; font-weight: 700; font-display: swap; src: url('/assets/fonts/kanit-700-latin.woff2') format('woff2'); }
+@font-face { font-family: 'Kanit'; font-style: normal; font-weight: 900; font-display: swap; src: url('/assets/fonts/kanit-900-latin.woff2') format('woff2'); }
+
+/* ==========================================================================
+   Tokens + reset (scoped)
+   ========================================================================== */
+.fp {
+  --fp-bg: #0C0C0C;
+  --fp-ink: #0C0C0C;
+  --fp-text: #E9E2D8;                       /* warm off-white, not the template's cool #D7E2EA */
+  --fp-muted: rgba(233, 226, 216, .62);
+  --fp-line: rgba(233, 226, 216, .85);
+  --fp-bronze: #826749;
+  --fp-copper: #A1805A;
+  --fp-sand: #E1C9A6;
+  --fp-light: #F5F0E8;
+  --fp-header: 100px;                       /* measured at runtime */
+  --fp-ease: cubic-bezier(.25, .1, .25, 1); /* the template's FadeIn ease */
+  --fp-r: 40px;                             /* band and card radius, grows with the viewport */
+
+  font-family: 'Kanit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--fp-bg);
+  color: var(--fp-text);
+  overflow-x: clip;
+  display: block;
+}
+@media (min-width: 640px) { .fp { --fp-r: 50px; } }
+@media (min-width: 768px) { .fp { --fp-r: 60px; } }
+
+.fp *, .fp *::before, .fp *::after { box-sizing: border-box; }
+.fp img, .fp video { max-width: 100%; }
+.fp a { color: inherit; }
+.fp section { scroll-margin-top: calc(var(--fp-header) + 8px); }
+
+.fp-display {
+  margin: 0;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -.02em;
+  line-height: .92;
+}
+.fp-gradient {
+  background: linear-gradient(180deg, #7A6046 0%, #E1C9A6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Descender room: background-clip: text clips at the box, so a hair of
+     padding stops the tails of letters being cut. */
+  padding-bottom: .06em;
+}
+
+/* Buttons — the template's two pills, in the brand's colours. */
+.fp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: .75rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: .75rem 2rem;
+  max-width: 100%;
+  text-align: center;
+  transition: transform .35s var(--fp-ease), background-color .25s ease, box-shadow .35s var(--fp-ease), color .25s ease;
+}
+@media (min-width: 480px) { .fp-btn { white-space: nowrap; } }
+@media (min-width: 640px) { .fp-btn { font-size: .875rem; padding: .875rem 2.5rem; } }
+@media (min-width: 768px) { .fp-btn { font-size: 1rem; padding: 1rem 3rem; } }
+/* The template's gradient runs light copper under the middle of the label,
+   which drops white text under 4.5:1. These stops keep every point at or
+   below #826749 (5.27:1) while holding the bronze-to-copper sheen. */
+.fp-btn--primary {
+  color: #fff;
+  background: linear-gradient(123deg, #2A1E14 7%, #826749 37%, #6B5238 72%, #A1805A 100%);
+  box-shadow: 0 4px 4px rgba(130, 103, 73, .25), inset 4px 4px 12px #6B5238;
+  outline: 2px solid #fff;
+  outline-offset: -3px;
+}
+.fp-btn--primary:hover { transform: translateY(-2px); box-shadow: 0 10px 22px -8px rgba(130, 103, 73, .6), inset 4px 4px 12px #6B5238; }
+.fp-btn--primary:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.fp-btn--ghost {
+  color: var(--fp-text);
+  background: transparent;
+  border: 2px solid var(--fp-line);
+  letter-spacing: .18em;
+}
+.fp-btn--ghost:hover { background: rgba(233, 226, 216, .1); }
+.fp-btn--ghost:focus-visible { outline: 3px solid var(--fp-text); outline-offset: 3px; }
+
+/* ==========================================================================
+   FadeIn — the template's whileInView. Hidden only once the script has
+   confirmed it can animate (html.fp-motion); otherwise everything shows.
+   Per-element offsets arrive as inline custom properties.
+   ========================================================================== */
+/* The transition lives on the revealed state only. If it sat on the base
+   rule, adding html.fp-motion would animate every visible element OUT and
+   the observer would immediately animate it back in — a flash on load. */
+html.fp-motion [data-fp-fade] {
+  opacity: 0;
+  transform: translate3d(var(--fp-x, 0px), var(--fp-y, 30px), 0);
+}
+html.fp-motion [data-fp-fade].is-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity var(--fp-dur, .7s) var(--fp-ease) var(--fp-delay, 0s),
+              transform var(--fp-dur, .7s) var(--fp-ease) var(--fp-delay, 0s);
+}
+
+/* Read by a screen reader, seen by nobody. Used for the founder's quote,
+   whose visible copy is split into per-character spans. */
+.fp-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* A section that took focus from the in-page nav is not a clickable thing;
+   it should not wear a ring. */
+.fp section:focus { outline: none; }
+
+/* ==========================================================================
+   1. Hero
+   ========================================================================== */
+.fp-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--fp-header));
+  min-height: calc(100svh - var(--fp-header));
+  padding: 0 1.5rem;
+  overflow-x: clip;
+}
+@media (min-width: 768px) { .fp-hero { padding: 0 2.5rem; } }
+
+.fp-nav {
+  display: flex;
+  flex-wrap: wrap;          /* 320px, or a large user font: wrap, never clip */
+  row-gap: .5rem;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  position: relative;
+  z-index: 20;
+}
+@media (min-width: 768px) { .fp-nav { padding-top: 2rem; } }
+.fp-nav a {
+  color: var(--fp-text);
+  font-weight: 500;
+  font-size: .875rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: opacity .2s ease;
+}
+@media (min-width: 768px)  { .fp-nav a { font-size: 1.125rem; } }
+@media (min-width: 1024px) { .fp-nav a { font-size: 1.4rem; } }
+.fp-nav a:hover { opacity: .7; }
+.fp-nav a:focus-visible { outline: 2px solid var(--fp-sand); outline-offset: 4px; }
+
+.fp-hero__title-wrap { overflow: hidden; margin-top: 1.5rem; }
+@media (min-width: 640px) { .fp-hero__title-wrap { margin-top: 1rem; } }
+@media (min-width: 768px) { .fp-hero__title-wrap { margin-top: -1.25rem; } }
+.fp-hero__title {
+  width: 100%;
+  white-space: nowrap;
+  line-height: 1;
+  letter-spacing: -.02em;
+  font-size: 14vw;
+}
+@media (min-width: 640px)  { .fp-hero__title { font-size: 15vw; } }
+@media (min-width: 768px)  { .fp-hero__title { font-size: 16vw; } }
+@media (min-width: 1024px) { .fp-hero__title { font-size: 17.5vw; } }
+
+.fp-hero__bar {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;          /* the CTA drops under the lede rather than clipping */
+  row-gap: 1rem;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  /* The third-party chat launcher is fixed in the bottom-right corner and
+     out-stacks everything, so the bar keeps clear of it rather than putting
+     the page's main call to action underneath it. */
+  padding-bottom: 5.5rem;
+  position: relative;
+  z-index: 20;
+}
+@media (min-width: 640px) { .fp-hero__bar { padding-bottom: 2rem; padding-right: 96px; } }
+@media (min-width: 768px) { .fp-hero__bar { padding-bottom: 2.5rem; } }
+.fp-hero__lede {
+  margin: 0;
+  max-width: 190px;
+  color: var(--fp-text);
+  font-weight: 300;
+  font-size: clamp(.75rem, 1.4vw, 1.5rem);
+  line-height: 1.35;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+@media (min-width: 640px) { .fp-hero__lede { max-width: 240px; } }
+@media (min-width: 768px) { .fp-hero__lede { max-width: 300px; } }
+
+/* The portrait: the owner, cut out, standing in front of the headline.
+   Three nested layers so no two transforms fight — the outer box only
+   positions, the fade layer animates in, the magnet layer follows the
+   pointer. Sized by height so it never swallows the headline on short
+   screens. */
+.fp-hero__portrait {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  width: 260px;
+  pointer-events: none;
+}
+@media (min-width: 640px) {
+  /* Narrower between the tablet widths so the lede and the pill at the
+     edges do not run across the figure. */
+  .fp-hero__portrait { top: auto; bottom: 0; transform: translateX(-50%); width: 300px; }
+}
+@media (min-width: 768px)  { .fp-hero__portrait { width: 360px; } }
+@media (min-width: 1024px) { .fp-hero__portrait { width: 460px; } } /* the photograph's own width — never upscaled */
+/* On a tall screen a bottom-anchored portrait drifts away from the headline;
+   capping the hero keeps the two together. */
+@media (min-width: 640px) and (min-height: 1000px) {
+  .fp-hero { min-height: min(calc(100svh - var(--fp-header)), 900px); }
+}
+.fp-hero__portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+  object-position: bottom center;
+  margin: 0 auto;
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, .65));
+}
+.fp-magnet { will-change: transform; }
+
+/* ==========================================================================
+   2. Marquee — two rows of real jobs, driven by the page's scroll position.
+   ========================================================================== */
+.fp-marquee {
+  background: var(--fp-bg);
+  padding: 6rem 0 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  overflow: hidden;
+}
+@media (min-width: 640px) { .fp-marquee { padding-top: 8rem; } }
+@media (min-width: 768px) { .fp-marquee { padding-top: 10rem; } }
+.fp-marquee__row {
+  display: flex;
+  gap: .75rem;
+  width: max-content;
+  will-change: transform;
+}
+.fp-marquee__tile {
+  flex: none;
+  display: block;
+  width: 300px;
+  height: 193px;
+  border-radius: 1rem;
+  object-fit: cover;
+  background: #1a1a1a;
+}
+@media (min-width: 768px) { .fp-marquee__tile { width: 420px; height: 270px; } }
+
+/* ==========================================================================
+   3. About — the founder's own words, character by character.
+   ========================================================================== */
+.fp-about {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5rem 1.25rem;
+  gap: 2.5rem;
+}
+@media (min-width: 640px) { .fp-about { padding: 5rem 2rem; gap: 3.5rem; } }
+@media (min-width: 768px) { .fp-about { padding: 5rem 2.5rem; gap: 4rem; } }
+/* Wrapped into the column the corner tiles leave free, on two balanced
+   lines ("BUILT THE / F.I.T. WAY"). The box is never allowed to be narrower
+   than the longest word — background-clip: text paints only inside the box,
+   so a too-narrow box does not wrap the headline, it slices it. Between the
+   tablet breakpoints the type shrinks instead. */
+.fp-about__title {
+  font-size: clamp(3rem, 12vw, 150px);
+  text-align: center;
+  text-wrap: balance;
+  max-width: 100%;
+}
+@media (min-width: 768px) and (max-width: 1279px) {
+  .fp-about__title { font-size: clamp(2.5rem, 7vw, 92px); max-width: min(100%, calc(100vw - 380px)); }
+}
+@media (min-width: 1280px) { .fp-about__title { max-width: 900px; } }
+.fp-about__body { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
+.fp-about__text {
+  margin: 0;
+  max-width: 560px;
+  color: var(--fp-text);
+  font-weight: 500;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  line-height: 1.6;
+}
+.fp-about__text .fp-w { display: inline-block; white-space: nowrap; }
+.fp-about__text .fp-c { display: inline-block; opacity: var(--o, 1); }
+.fp-about__cite {
+  margin: 0;
+  color: var(--fp-muted);
+  font-weight: 300;
+  font-size: .8rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.fp-about__cta { margin-top: 1.5rem; }
+@media (min-width: 640px) { .fp-about__cta { margin-top: 2.5rem; } }
+@media (min-width: 768px) { .fp-about__cta { margin-top: 3.5rem; } }
+
+/* Four real stills in the corners where the template hangs 3D toys. */
+.fp-about__deco {
+  position: absolute;
+  z-index: 0;
+  width: 120px;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 24px 48px -20px rgba(0, 0, 0, .8);
+  pointer-events: none;
+}
+.fp-about__deco img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+.fp-about__deco--tl { top: 4%;    left: 1%;  transform: rotate(-6deg); }
+.fp-about__deco--bl { bottom: 8%; left: 3%;  width: 100px; transform: rotate(4deg); }
+.fp-about__deco--tr { top: 4%;    right: 1%; transform: rotate(5deg); }
+.fp-about__deco--br { bottom: 8%; right: 3%; width: 130px; transform: rotate(-4deg); }
+@media (min-width: 640px) {
+  .fp-about__deco { width: 160px; }
+  .fp-about__deco--tl { left: 2%; }  .fp-about__deco--bl { left: 6%;  width: 140px; }
+  .fp-about__deco--tr { right: 2%; } .fp-about__deco--br { right: 6%; width: 170px; }
+}
+@media (min-width: 768px) {
+  .fp-about__deco { width: 210px; }
+  .fp-about__deco--tl { left: 4%; }  .fp-about__deco--bl { left: 10%;  width: 180px; }
+  .fp-about__deco--tr { right: 4%; } .fp-about__deco--br { right: 10%; width: 220px; }
+}
+/* Below the desktop breakpoint the bottom pair collides with the quote and
+   the call to action; the top pair still frames the headline. */
+@media (max-width: 1023px) {
+  .fp-about__deco--bl, .fp-about__deco--br { display: none; }
+}
+/* The FadeIn transform on the deco wrapper and the rotation on the tile
+   live on different elements, so neither cancels the other. */
+.fp-about__deco-wrap { position: absolute; inset: 0; pointer-events: none; }
+.fp-about__body, .fp-about__title, .fp-about__cta { position: relative; z-index: 1; }
+
+/* ==========================================================================
+   4. Services — the light band. Number, name, one honest sentence.
+   ========================================================================== */
+.fp-services {
+  position: relative;
+  background: var(--fp-light);
+  color: var(--fp-ink);
+  border-radius: var(--fp-r) var(--fp-r) 0 0;
+  padding: 5rem 1.25rem;
+}
+@media (min-width: 640px) { .fp-services { padding: 6rem 2rem; } }
+@media (min-width: 768px) { .fp-services { padding: 8rem 2.5rem; } }
+.fp-services__title {
+  color: var(--fp-ink);
+  text-align: center;
+  font-size: clamp(3rem, 12vw, 160px);
+  margin-bottom: 4rem;
+}
+@media (min-width: 640px) { .fp-services__title { margin-bottom: 5rem; } }
+@media (min-width: 768px) { .fp-services__title { margin-bottom: 7rem; } }
+.fp-services__list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 64rem;
+}
+.fp-service {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 2rem 0;
+  border-top: 1px solid rgba(12, 12, 12, .15);
+}
+.fp-service:last-child { border-bottom: 1px solid rgba(12, 12, 12, .15); }
+@media (min-width: 640px) { .fp-service { gap: 2.5rem; padding: 2.5rem 0; } }
+@media (min-width: 768px) { .fp-service { gap: 4rem; padding: 3rem 0; } }
+.fp-service__num {
+  flex: none;
+  min-width: 2.1ch;
+  font-weight: 900;
+  font-size: clamp(3rem, 10vw, 140px);
+  line-height: .85;
+  color: var(--fp-ink);
+  transition: color .3s ease;
+}
+.fp-service:hover .fp-service__num { color: var(--fp-bronze); }
+.fp-service__name {
+  margin: 0 0 .5rem;
+  font-weight: 500;
+  font-size: clamp(1rem, 2.2vw, 2.1rem);
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  line-height: 1.15;
+}
+.fp-service__name a { text-decoration: none; transition: color .25s ease; }
+.fp-service__name a:hover { color: var(--fp-bronze); }
+.fp-service__name a:focus-visible { outline: 2px solid var(--fp-bronze); outline-offset: 4px; }
+.fp-service__desc {
+  margin: 0;
+  max-width: 42rem;
+  font-weight: 300;
+  font-size: clamp(.85rem, 1.6vw, 1.25rem);
+  line-height: 1.6;
+  opacity: .6;
+}
+
+/* ==========================================================================
+   5. Projects — three sticky cards that stack and settle back in scale.
+   ========================================================================== */
+.fp-projects {
+  position: relative;
+  z-index: 10;
+  background: var(--fp-bg);
+  border-radius: var(--fp-r) var(--fp-r) 0 0;
+  margin-top: -2.5rem;
+  padding: 5rem 1rem 3rem;
+}
+@media (min-width: 640px) { .fp-projects { margin-top: -3rem;   padding: 6rem 1.5rem 3rem; } }
+@media (min-width: 768px) { .fp-projects { margin-top: -3.5rem; padding: 8rem 2.5rem 4rem; } }
+.fp-projects__title {
+  text-align: center;
+  font-size: clamp(3rem, 12vw, 160px);
+  margin-bottom: 2rem;
+}
+.fp-stack { max-width: 80rem; margin: 0 auto; }
+/* The SLOT is what sticks, not the card. A sticky card inside a slot of its
+   own can only stick for (slot height − card height), so it unsticks long
+   before the next card arrives and nothing ever piles up. With the slot
+   sticky at top:0 and a staircase of padding-top, each slot comes up and
+   covers the one before it — which is the effect. */
+.fp-stack__slot {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  min-height: 640px;
+  display: flex;
+  align-items: flex-start;
+  padding-top: calc(var(--fp-header) + 1.25rem + var(--fp-i, 0) * 30px);
+}
+.fp-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: var(--fp-r);
+  border: 2px solid var(--fp-line);
+  background: var(--fp-bg);
+  transform-origin: top center;
+  will-change: transform;
+}
+@media (min-width: 640px) { .fp-card { padding: 1.5rem; gap: 1.25rem; } }
+@media (min-width: 768px) {
+  .fp-stack__slot { padding-top: calc(var(--fp-header) + 2rem + var(--fp-i, 0) * 30px); }
+  .fp-card { padding: 2rem; gap: 1.5rem; }
+}
+.fp-card__head {
+  display: flex;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  flex-wrap: wrap;
+}
+.fp-card__num {
+  font-weight: 900;
+  font-size: clamp(2.5rem, 7vw, 96px);
+  line-height: .85;
+  color: var(--fp-text);
+}
+.fp-card__meta { display: flex; flex-direction: column; gap: .2rem; min-width: 0; }
+.fp-card__cat {
+  margin: 0;
+  color: var(--fp-muted);
+  font-weight: 500;
+  font-size: .72rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.fp-card__name {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(1.15rem, 2.4vw, 2.2rem);
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+.fp-card__cta { margin-left: auto; }
+.fp-card__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .75rem;
+}
+.fp-card__col1 { display: grid; grid-template-rows: clamp(110px, 13vw, 190px) clamp(150px, 19vw, 300px); gap: .75rem; }
+/* The tall column's media is taken out of flow, so the row's height comes
+   from the two stacked images on the left and a <video> (whose percentage
+   height would otherwise resolve against nothing and balloon) can never
+   stretch the card. */
+.fp-card__col2 { position: relative; height: 220px; border-radius: var(--fp-r); overflow: hidden; }
+@media (min-width: 640px) {
+  .fp-card__grid { grid-template-columns: 2fr 3fr; gap: 1rem; }
+  .fp-card__col1 { gap: 1rem; }
+  .fp-card__col2 { height: auto; min-height: 0; }
+}
+@media (min-width: 768px) { .fp-card__grid, .fp-card__col1 { gap: 1.25rem; } }
+.fp-card__media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--fp-r);
+  background: #1a1a1a;
+}
+.fp-card__col2 .fp-card__media { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* The looping flyover runs longer than five seconds, so WCAG 2.2.2 wants a
+   way to stop it. A small capsule over the corner of the clip. */
+.fp-vid-toggle {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 2;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: .45em;
+  border: 1px solid rgba(233, 226, 216, .5);
+  background: rgba(12, 12, 12, .72);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  color: var(--fp-text);
+  font: inherit;
+  font-size: .7rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .45rem .8rem;
+  border-radius: 999px;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+.fp-vid-toggle:hover { background: rgba(12, 12, 12, .9); border-color: var(--fp-line); }
+.fp-vid-toggle:focus-visible { outline: 2px solid var(--fp-text); outline-offset: 3px; }
+
+/* Short viewports (a 1024×576 laptop at 100%): the card has to fit inside
+   the slot under the header, so it shrinks rather than overflowing. */
+@media (min-width: 640px) and (max-height: 720px) {
+  .fp-stack__slot { min-height: 0; padding-top: calc(var(--fp-header) + .6rem + var(--fp-i, 0) * 18px); }
+  .fp-card { padding: 1.1rem; gap: .8rem; }
+  .fp-card__col1 { grid-template-rows: clamp(84px, 10vw, 128px) clamp(104px, 13vw, 170px); }
+  .fp-card__num { font-size: clamp(2rem, 4.5vw, 56px); }
+  .fp-card__head { gap: .6rem 1.2rem; }
+}
+
+/* Closing ask — the page's own words, as before. */
+.fp-projects__cta {
+  max-width: 48rem;
+  margin: 6rem auto 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+@media (min-width: 768px) { .fp-projects__cta { margin-top: 8rem; } }
+.fp-projects__cta-title { font-size: clamp(2.2rem, 7vw, 96px); }
+.fp-projects__cta-text {
+  margin: 0;
+  color: var(--fp-text);
+  font-weight: 300;
+  font-size: clamp(1rem, 1.8vw, 1.35rem);
+  line-height: 1.5;
+}
+
+/* The rows start off the left edge so the scroll-driven travel never opens
+   a gap at either end — but only by as much as each row actually travels,
+   or the first real photograph of the row is never on screen. Row 1 moves
+   right, row 2 moves left. */
+.fp-marquee__row[data-fp-row="1"] { margin-left: -320px; }
+.fp-marquee__row[data-fp-row="2"] { margin-left: -60px; }
+
+/* ==========================================================================
+   Reduced motion: everything visible and still.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html.fp-motion [data-fp-fade] { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .fp-marquee__row, .fp-magnet, .fp-card { transform: none !important; transition: none !important; }
+  .fp-about__text .fp-c { opacity: 1 !important; }
+  .fp-btn--primary:hover { transform: none; }
+}
