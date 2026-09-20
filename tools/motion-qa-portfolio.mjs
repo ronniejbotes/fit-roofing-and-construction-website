@@ -235,6 +235,57 @@ const JUMP = 'window.__jump = (y) => window.scrollTo({ top: y, left: 0, behavior
   await ctx.close()
 }
 
+/* ---------------- Card heights across real laptop/phone viewports -------
+ * A pinned card that is taller than the space under the header never shows
+ * its bottom edge at ANY scroll position. Width-only sizing missed this: a
+ * 1080p laptop at 125% scaling reports 1536x730, and 1366x768 is ordinary.
+ * Walk the stack and require every card to come fully into view, uncovered
+ * by the card after it.
+ * ---------------------------------------------------------------------- */
+{
+  const VIEWPORTS = [
+    [1536, 730, '1080p @125%'], [1536, 721, ''], [1440, 760, ''],
+    [1366, 768, 'common laptop'], [1440, 800, ''], [1280, 720, ''],
+    [1440, 900, 'control'], [1920, 1080, 'control'],
+    [390, 844, 'phone'], [360, 640, 'small phone'],
+  ]
+  note('\n[card heights]')
+  for (const [w, h, label] of VIEWPORTS) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: h } })
+    await blockAnalytics(ctx)
+    const page = await ctx.newPage()
+    await page.goto(BASE + '/portfolio/', { waitUntil: 'load' })
+    await page.evaluate(JUMP)
+    await page.evaluate(() => window.__jump(0))
+    await page.waitForTimeout(700)
+
+    const range = await page.evaluate(() => {
+      const st = document.querySelector('.fp-stack').getBoundingClientRect()
+      return { top: Math.round(st.top + scrollY), height: Math.round(st.height) }
+    })
+    const best = [Infinity, Infinity, Infinity]
+    for (let s = 0; s <= 40; s++) {
+      await page.evaluate((t) => window.__jump(t), Math.round(range.top + (s / 40) * (range.height - h)))
+      await page.waitForTimeout(40)
+      const cards = await page.evaluate(() => Array.from(document.querySelectorAll('.fp-card')).map((c) => {
+        const r = c.getBoundingClientRect()
+        return { t: Math.round(r.top), b: Math.round(r.bottom) }
+      }))
+      for (let i = 0; i < cards.length; i++) {
+        const c = cards[i], next = cards[i + 1]
+        if (c.t < 0 || c.t >= h) continue          // its top is off screen
+        if (next && next.t < c.b) continue          // the next card covers it
+        best[i] = Math.min(best[i], c.b - h)        // >0 = hangs below the fold
+      }
+    }
+    const worst = Math.max(...best)
+    const txt = `${w}x${h}${label ? ' (' + label + ')' : ''}: clearance ${best.map((v) => (v === Infinity ? 'n/a' : -v + 'px')).join(' / ')}`
+    if (worst > 0) bad(txt + ' — a card is cut off by ' + worst + 'px at every scroll position')
+    else note('  ' + txt)
+    await ctx.close()
+  }
+}
+
 /* ---------------- Reduced motion ---------------------------------------- */
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' })

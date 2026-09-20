@@ -513,6 +513,7 @@ html.fp-motion [data-fp-fade].is-in {
 .fp-card__num {
   font-weight: 900;
   font-size: clamp(2.5rem, 7vw, 96px);
+  font-size: clamp(2.5rem, min(7vw, 9svh), 96px);
   line-height: .85;
   color: var(--fp-text);
 }
@@ -538,7 +539,17 @@ html.fp-motion [data-fp-fade].is-in {
   grid-template-columns: 1fr;
   gap: .75rem;
 }
-.fp-card__col1 { display: grid; grid-template-rows: clamp(110px, 13vw, 190px) clamp(150px, 19vw, 300px); gap: .75rem; }
+/* The picture rows are sized by width AND by height. Width alone leaves a
+   1080p laptop at 125% scaling (1536x730) with a card taller than the space
+   under the header, so the bottom of the photograph, the border and the
+   rounded corners never come into view while the card is pinned. The second
+   declaration wins wherever svh is supported; the first is the fallback. */
+.fp-card__col1 {
+  display: grid;
+  gap: .75rem;
+  grid-template-rows: clamp(110px, 13vw, 190px) clamp(150px, 19vw, 300px);
+  grid-template-rows: clamp(110px, min(13vw, 21svh), 190px) clamp(150px, min(19vw, 32svh), 300px);
+}
 /* The tall column's media is taken out of flow, so the row's height comes
    from the two stacked images on the left and a <video> (whose percentage
    height would otherwise resolve against nothing and balloon) can never
@@ -590,9 +601,43 @@ html.fp-motion [data-fp-fade].is-in {
 .fp-vid-toggle:hover { background: rgba(12, 12, 12, .9); border-color: var(--fp-line); }
 .fp-vid-toggle:focus-visible { outline: 2px solid var(--fp-text); outline-offset: 3px; }
 
-/* Short viewports (a 1024×576 laptop at 100%): the card has to fit inside
-   the slot under the header, so it shrinks rather than overflowing. */
-@media (min-width: 640px) and (max-height: 720px) {
+/* Phones. The single-column card is the tall one — two stacked pictures
+   plus a 220px tall column — and at 360×640 it overflowed its own slot by
+   192px, so the bottom of the main photograph could never be seen. The
+   pictures are sized against the viewport's height here, not its width. */
+@media (max-width: 639px) {
+  .fp-stack__slot {
+    min-height: 0;
+    padding-top: calc(var(--fp-header) + .6rem + var(--fp-i, 0) * 14px);
+  }
+  .fp-card { padding: .8rem; gap: .6rem; }
+
+  /* The card is one column here, so the desktop layout stacks all three
+     photographs vertically — 549px of pictures, which overflowed the slot
+     and hid the bottom of the card at every scroll position. The main
+     picture goes on top and the two details sit side by side under it, so
+     the whole job still shows and the card fits. */
+  .fp-card__grid { grid-template-columns: 1fr; gap: .6rem; }
+  .fp-card__col2 { order: -1; height: clamp(140px, 26svh, 240px); }
+  .fp-card__col1 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: clamp(72px, 14svh, 130px);
+    gap: .6rem;
+  }
+
+  .fp-card__num { font-size: clamp(1.9rem, 9svh, 3rem); }
+  .fp-card__head { gap: .4rem .9rem; }
+  .fp-card__name { font-size: clamp(1rem, 4.6vw, 1.3rem); }
+  .fp-card__cta { margin-left: 0; padding: .6rem 1.4rem; font-size: .7rem; }
+}
+
+/* Short viewports: the card has to fit inside the slot under the header, so
+   it shrinks rather than overflowing. The ceiling is 820px, not 720px — the
+   last card carries the biggest staircase offset (header + 2rem + 2×30px),
+   and measuring the real stack showed it still hanging below the fold at
+   721–810px tall, which is exactly where a 1080p laptop at 125% scaling
+   (1536×730) and a 1366×768 laptop both land. */
+@media (min-width: 640px) and (max-height: 820px) {
   .fp-stack__slot { min-height: 0; padding-top: calc(var(--fp-header) + .6rem + var(--fp-i, 0) * 18px); }
   .fp-card { padding: 1.1rem; gap: .8rem; }
   .fp-card__col1 { grid-template-rows: clamp(84px, 10vw, 128px) clamp(104px, 13vw, 170px); }

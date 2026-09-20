@@ -151,6 +151,24 @@ sticks (`top: 0`, one viewport tall, with a staircase of `padding-top`), the car
 is static, and successive slots ride up and cover the ones before them. Three cards are now
 on screen together at the end of the run, at 0.94 / 0.97 / 1.0 scale.
 
+The second structural one was a viewport the width-only sizing never considered:
+**a 1080p laptop at 125% scaling** (1536×730 CSS pixels, which is what a great many Windows
+machines actually report). The card was taller than the space under the header, so the
+bottom of the photograph, the border and the rounded corners never came into view while the
+card was pinned — at *any* scroll position. Two changes were needed, and the first alone was
+not enough: the picture rows and the big number are now sized by height as well as width
+(`min(13vw, 21svh)`, as a second declaration so older browsers keep the width-only
+fallback), **and** the compact rule's ceiling moved from 720px to 820px, because the last
+card carries the largest staircase offset and was still overflowing at 721–810px tall.
+The same fault existed on phones, and there the cause was different: the card is a single
+column on a phone, so the desktop layout stacked all three photographs vertically — 549px
+of pictures inside a 493px budget. Shrinking them was not the answer. The main picture now
+sits on top with the two details side by side beneath it, which shows the whole job and
+fits. `npm run motion:qa:portfolio` now walks the stack at
+ten viewports (including 1536×730, 1366×768, 390×844 and 360×640) and fails if any card
+never comes fully into view, uncovered, at any scroll position. That walk is what caught
+both of these; the earlier desktop-only checks passed throughout.
+
 Also fixed: the founder's quote now ships a real, visually-hidden copy for screen
 readers (an `aria-label` on a `<p>` whose only child is `aria-hidden` is skipped by NVDA and
 JAWS — the quote was silently unreadable); the reveal transition moved off the hidden state
