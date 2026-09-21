@@ -1,0 +1,15 @@
+# Enquiries are stored here. They carry a name, a phone number and an address,
+# so nothing in this directory may ever be served over the web. Denied here and
+# again in the .htaccess at the repo root, because one of the two being lost in
+# a deploy must not be enough to expose them.
+
+# Apache 2.4 / LiteSpeed
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+
+# Apache 2.2
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>

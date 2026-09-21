@@ -17,6 +17,14 @@ ErrorDocument 404 /404.html
 # Directory listings are not part of the site.
 Options -Indexes
 
+# Stored enquiries carry a name, a phone number and an address. _forms/leads/
+# denies itself as well; this is the second lock, so losing one file in a
+# deploy does not put customer details on the open web.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^_forms/leads(/.*)?$ - [F,L]
+</IfModule>
+
 <IfModule mod_rewrite.c>
 RewriteEngine On
 

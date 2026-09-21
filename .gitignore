@@ -33,3 +33,9 @@ Desktop.ini
 .parity.json
 .probe.json
 _redirects.observed
+
+# Stored enquiries: real names, phone numbers and addresses. The handler writes
+# them here; they are customer data and must never be committed. The directory
+# itself is kept (its .htaccess is tracked) so the deny rule ships.
+_forms/leads/*
+!_forms/leads/.htaccess

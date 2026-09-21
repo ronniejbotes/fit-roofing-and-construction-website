@@ -279,6 +279,48 @@ if (isset($_SERVER['REMOTE_ADDR'])) {
     $body .= str_pad('From IP:', $width + 2) . fit_line($_SERVER['REMOTE_ADDR']) . "\n";
 }
 
+/* ------------------------------------------------------------- the record */
+/*
+ * The enquiry is written to disk BEFORE any attempt to send it, because mail()
+ * cannot be trusted to tell the truth about delivery. It returns true once the
+ * message is handed to the local queue, not when it arrives, so a domain with
+ * no MX and no SPF — which is what fitroofingco.com is as of 21 Sept 2026 —
+ * produces a visitor who is thanked, a handler that reports success, and an
+ * enquiry nobody ever receives.
+ *
+ * Writing first means the worst case is a lead that has to be read out of a
+ * file, instead of a lead that never existed. The mail is the convenience; the
+ * file is the record.
+ *
+ * _forms/leads/ is denied to the web by its own .htaccess and again by the one
+ * at the repo root, and the .jsonl files are gitignored: enquiries carry a
+ * name, a phone number and an address, and none of that belongs in the repo or
+ * in a URL somebody can guess.
+ */
+function fit_store(array $fields, $page, $email)
+{
+    $dir = __DIR__ . '/leads';
+    if (!is_dir($dir) && !@mkdir($dir, 0700, true) && !is_dir($dir)) {
+        return false;
+    }
+    $record = [
+        'received' => date('c'),
+        'page'     => $page,
+        'email'    => $email,
+        'ip'       => isset($_SERVER['REMOTE_ADDR']) ? fit_line($_SERVER['REMOTE_ADDR']) : '',
+        'fields'   => $fields,
+    ];
+    $line = json_encode($record, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    if ($line === false) {
+        return false;
+    }
+    // One file per month, append-only, locked: two submissions landing in the
+    // same instant must not interleave into one corrupt line.
+    return @file_put_contents($dir . '/' . date('Y-m') . '.jsonl', $line . "\n", FILE_APPEND | LOCK_EX) !== false;
+}
+
+$stored = fit_store(array_merge($inline, $blocks), $page, $email);
+
 $subject = fit_line('Fit Roofing website enquiry from ' . $page);
 
 $headers = ['From: ' . $FROM];
@@ -294,7 +336,14 @@ $headers[] = 'Content-Transfer-Encoding: base64';
 
 $message = chunk_split(base64_encode($body), 76, "\r\n");
 
-if (!mail($TO, $subject, $message, implode("\r\n", $headers))) {
+$sent = mail($TO, $subject, $message, implode("\r\n", $headers));
+
+// The visitor is told the truth about their enquiry, not about our plumbing.
+// If it is on disk it has been received, whether or not the mail got out, and
+// saying so is honest. Only a submission that is neither stored nor sent has
+// actually been lost, and that is the one case worth showing an error for —
+// the error copy points at the phone number, which works.
+if (!$sent && !$stored) {
     fit_finish($page, 'error');
 }
 
