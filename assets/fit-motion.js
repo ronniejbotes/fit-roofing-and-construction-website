@@ -234,6 +234,14 @@
       t.style.setProperty('--fit-delay', '0ms')
       t.classList.add('fit-in-now')
       t.classList.add('fit-in')
+      /* Resolve the revealed style while transitions are still switched off,
+         then drop the class in the same tick. It cannot be deferred to a rAF:
+         those run before style recalc, so the fade would come back and focus
+         would sit on something mid-animation after all. Left on, the class's
+         `transition: none !important` is unconditional and would kill this
+         element's hover lift and tilt spring-back for the life of the page. */
+      void t.offsetWidth
+      t.classList.remove('fit-in-now')
       if (io) io.unobserve(t)
     })
   }
@@ -263,8 +271,10 @@
       if (/pattern/i.test(bg)) continue
       if (cs.backgroundSize !== 'cover') continue
 
+      // No generated class to key the background-off rule to: this candidate
+      // is unusable, but the next one may not be.
       var id = (el.className || '').toString().match(/elementor-element-[0-9a-z]+/)
-      if (!id) return
+      if (!id) continue
 
       var st = document.createElement('style')
       st.setAttribute('data-fit-hero', id[0])
@@ -316,19 +326,22 @@
       var se = document.scrollingElement || html
       var y = se.scrollTop || window.pageYOffset || 0
       var max = (se.scrollHeight - se.clientHeight) || 1
+      // Every layout read happens before the first write. --fit-scroll is an
+      // inherited property on the root, so writing it dirties style for the
+      // whole tree; reading the hero's height afterwards would force a
+      // synchronous recalc on every single scroll frame.
+      var h = (hero && heroLayer) ? (hero.offsetHeight || 1) : 0
+
       html.style.setProperty('--fit-scroll', Math.min(1, Math.max(0, y / max)).toFixed(4))
       html.classList.toggle('fit-scrolled', y > 40)
 
-      if (hero && heroLayer) {
-        var h = hero.offsetHeight || 1
-        if (y < h * 1.25) {
-          // The photograph trails the page at a fraction of its speed. The
-          // cap is the slack the 4% scale in the CSS provides above the box
-          // (half of 4%), so an edge can never show.
-          var py = Math.min(y * 0.22, h * 0.02)
-          heroLayer.style.setProperty('--fit-hero-y', py.toFixed(1) + 'px')
-          html.style.setProperty('--fit-owner-y', (y * 0.08).toFixed(1) + 'px')
-        }
+      if (h && y < h * 1.25) {
+        // The photograph trails the page at a fraction of its speed. The cap
+        // is the slack the 4% scale in the CSS provides above the box (half
+        // of 4%), so an edge can never show.
+        var py = Math.min(y * 0.22, h * 0.02)
+        heroLayer.style.setProperty('--fit-hero-y', py.toFixed(1) + 'px')
+        html.style.setProperty('--fit-owner-y', (y * 0.08).toFixed(1) + 'px')
       }
     }
     function onScroll() {
@@ -357,25 +370,39 @@
         'perspective(900px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) translateY(-6px)'
     }
 
-    card.addEventListener('pointerenter', function () {
+    function onEnter() {
       over = true
       rect = card.getBoundingClientRect()
-    })
-    card.addEventListener('pointermove', function (e) {
+    }
+    function onMove(e) {
       if (!rect || !rect.width || !rect.height) return
       var px = Math.max(-1, Math.min(1, ((e.clientX - rect.left) / rect.width) * 2 - 1))
       var py = Math.max(-1, Math.min(1, ((e.clientY - rect.top) / rect.height) * 2 - 1))
       ry = px * 5
       rx = -py * 5
       if (!raf) raf = window.requestAnimationFrame(apply)
-    }, { passive: true })
-    card.addEventListener('pointerleave', function () {
+    }
+    function onLeave() {
       over = false
       rect = null
       rx = ry = 0
       if (!raf) raf = window.requestAnimationFrame(apply)
+    }
+
+    card.addEventListener('pointerenter', onEnter)
+    card.addEventListener('pointermove', onMove, { passive: true })
+    card.addEventListener('pointerleave', onLeave)
+
+    // Named rather than inline so teardown can take them off again.
+    tilted.push({
+      el: card,
+      unbind: function () {
+        if (raf) { window.cancelAnimationFrame(raf); raf = null }
+        card.removeEventListener('pointerenter', onEnter)
+        card.removeEventListener('pointermove', onMove)
+        card.removeEventListener('pointerleave', onLeave)
+      },
     })
-    tilted.push(card)
   }
 
   function initTilt(cards) {
@@ -446,6 +473,13 @@
       try { sessionStorage.setItem(NAV_KEY, '1') } catch (err) { }
       html.classList.add('fit-leaving')
       setTimeout(function () { window.location.href = url.href }, 420)
+      /* Belt and braces, the same as the arriving side has. The curtain is
+         opaque and deliberately swallows clicks, and only a new document
+         takes it away. A navigation that never lands — Esc, the Stop button,
+         a dropped connection, a 204, a download we did not filter — replaces
+         nothing and fires no pageshow, so without this the visitor is left
+         staring at a bronze wall with no way back but a manual reload. */
+      setTimeout(function () { html.classList.remove('fit-leaving') }, 3000)
     })
   }
 
@@ -458,12 +492,382 @@
   })
 
   /* ------------------------------------------------------------------------
-   * 7. Teardown: the visitor turned reduced motion on mid-session.
+   * 6b. Seams between stacked pattern bands.
+   *
+   * Adjacent sections painting the same pattern on the same ground are meant
+   * to look like one band. Two things break that, and both are Elementor's
+   * defaults rather than anything we added: each section carries its own
+   * background-overlay opacity, and each restarts the tiling from its own
+   * box. The result is a tonal step straight across the page and a lattice
+   * that jumps at the join.
+   *
+   * Only sections that share a ground are joined. A dark band meeting the
+   * white counters band is a deliberate change of surface and is left alone.
    * ---------------------------------------------------------------------- */
+  function patternSections() {
+    var out = []
+    var cands = document.querySelectorAll('.e-con, .elementor-top-section, section.elementor-section')
+    for (var i = 0; i < cands.length; i++) {
+      var el = cands[i]
+      var cs = window.getComputedStyle(el)
+      if ((cs.backgroundImage || '').indexOf('Pattern') === -1) continue
+      // outermost only, so a nested container is not counted twice
+      if (el.parentElement && el.parentElement.closest('[data-fit-pattern="1"]')) continue
+      el.setAttribute('data-fit-pattern', '1')
+      var r = el.getBoundingClientRect()
+      out.push({
+        el: el, cs: cs, before: window.getComputedStyle(el, '::before'),
+        top: r.top + (window.pageYOffset || 0), h: r.height, w: r.width,
+      })
+    }
+    return out
+  }
+
+  /* The artwork is square, so one tile is as tall as it is wide. */
+  function tileHeight(s) {
+    var size = (s.cs.backgroundSize || '').split(' ')[0]
+    if (size.indexOf('%') > -1) return (parseFloat(size) / 100) * s.w
+    var px = parseFloat(size)
+    return isFinite(px) && px > 0 ? px : 0
+  }
+
+  /* Where this section's own tiling starts, measured from its top edge. */
+  function tileOrigin(s, tile) {
+    var posY = (s.cs.backgroundPosition || '50% 50%').split(' ')[1] || '50%'
+    if (posY.indexOf('%') > -1) return (s.h - tile) * (parseFloat(posY) / 100)
+    var px = parseFloat(posY)
+    return isFinite(px) ? px : 0
+  }
+
+  /* Undo the previous pass before measuring again.
+
+     This is load-bearing rather than tidiness: tileOrigin reads the computed
+     background-position of whichever section starts a run, and if a band that
+     was joined at the old width becomes a run start at the new one, the stale
+     inline pixel value would be read back as though it were the stylesheet's
+     own origin — a worse offset than doing nothing. */
+  function clearSeams() {
+    var done = document.querySelectorAll('[data-fit-pattern="1"]')
+    for (var i = 0; i < done.length; i++) {
+      done[i].removeAttribute('data-fit-pattern')
+      done[i].classList.remove('fit-seam')
+      done[i].style.removeProperty('--fit-seam-op')
+      done[i].style.backgroundPositionY = ''
+    }
+  }
+
+  function initSeams() {
+    clearSeams()
+    var pat = patternSections()
+    var runOrigin = null, runOpacity = null, runId = 0
+    for (var i = 0; i < pat.length; i++) {
+      var cur = pat[i]
+      var prev = i > 0 ? pat[i - 1] : null
+      var tile = tileHeight(cur)
+      var joins = !!prev && tile > 0 &&
+        Math.abs(cur.top - (prev.top + prev.h)) <= 4 &&
+        prev.cs.backgroundColor === cur.cs.backgroundColor &&
+        prev.before.backgroundColor === cur.before.backgroundColor
+
+      if (!joins) {
+        // A new run starts here. The id is what lets the hover effect treat
+        // a merged pair as one surface rather than two.
+        runId++
+        cur.el.setAttribute('data-fit-run', 'r' + runId)
+        runOrigin = tile > 0 ? tileOrigin(cur, tile) : 0
+        runOpacity = cur.before.opacity
+        continue
+      }
+      cur.el.setAttribute('data-fit-run', 'r' + runId)
+
+      // Carry the previous section's tiling across the join.
+      var origin = runOrigin - prev.h
+      origin = ((origin % tile) + tile) % tile
+      if (origin > 0) origin -= tile
+      cur.el.style.backgroundPositionY = origin.toFixed(2) + 'px'
+
+      // And match the overlay, which is what actually shows as a step.
+      cur.el.classList.add('fit-seam')
+      cur.el.style.setProperty('--fit-seam-op', runOpacity)
+
+      runOrigin = origin
+    }
+
+    /* The hover layer draws a magnified copy of the pattern, and the copy has
+       to sit on the same grid as the real one underneath it or the two double
+       into a blur rather than reading as depth. Its position is a snapshot,
+       so it is refreshed at the end of every pass rather than only where it
+       is first written: bands are measured at DOMContentLoaded, before images
+       and the font swap settle their heights, so the offsets applied above
+       are frequently not the ones the lattice captured — measured half a tile
+       out on four of the five bands of /about/. */
+    var lat = document.querySelectorAll('[data-fit-lattice="1"]')
+    for (var n = 0; n < lat.length; n++) {
+      lat[n].style.setProperty('--fit-lat-pos', window.getComputedStyle(lat[n]).backgroundPosition)
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+   * 7. The lattice dimple.
+   *
+   * The bronze diamond pattern backs ~42 sections across the site. Under the
+   * pointer the surface presses in; a click lands like a hailstone. All the
+   * drawing is in fit-motion.css — this only finds the sections, hands the
+   * stylesheet the pattern it is already painting, and feeds it coordinates.
+   *
+   * Precise pointers only: on a touch screen there is no hover to follow,
+   * and a dimple that appears under a tap and stays is just a smudge.
+   * ---------------------------------------------------------------------- */
+  var lattices = []
+  var runs = []
+
+  /* One run of merged bands is one hover surface.
+   *
+   * Each layer is clipped to its own section, so a glow driven only by the
+   * section under the pointer stopped dead at an internal boundary and the
+   * circle came out sliced in half — which is exactly what a merged pair
+   * must not do. Every layer in the run is now given the same point on the
+   * page, expressed relative to its own box, and shows whatever part of the
+   * circle falls inside it. The pieces line up into one circle across the
+   * join. Coordinates are kept in viewport space for that reason. */
+  function bindLattice(run) {
+    var raf = null, vx = 0, vy = 0, lit = false
+
+    function write() {
+      raf = null
+      for (var i = 0; i < run.length; i++) {
+        // Read the rect here rather than caching it on enter: the page can
+        // scroll between one pointer frame and the next, so a cached rect
+        // would already be stale by that distance on the very next move.
+        var r = run[i].el.getBoundingClientRect()
+        run[i].layer.style.setProperty('--fit-mx', (vx - r.left) + 'px')
+        run[i].layer.style.setProperty('--fit-my', (vy - r.top) + 'px')
+      }
+    }
+
+    function setLit(on) {
+      lit = on
+      for (var i = 0; i < run.length; i++) {
+        run[i].el.classList[on ? 'add' : 'remove']('is-dimpled')
+      }
+    }
+
+    /* The pointer holds still and the page moves instead. Chrome dispatches
+       no pointermove for a wheel scroll, so without this the coordinates
+       freeze while the band slides out from under the cursor, and the glow
+       is left behind by exactly how far you scrolled — while the band is
+       still lit. That is the most ordinary interaction on the site: reading
+       a page with the pointer resting on it. The coordinates are already in
+       viewport space, so re-running write against the fresh rects is the
+       whole fix. An unlit run costs one predicate per scroll event. */
+    function onView() {
+      if (!lit || raf) return
+      raf = window.requestAnimationFrame(write)
+    }
+
+    function inRun(node) {
+      if (!node) return false
+      for (var i = 0; i < run.length; i++) {
+        if (run[i].el === node || run[i].el.contains(node)) return true
+      }
+      return false
+    }
+
+    window.addEventListener('scroll', onView, { passive: true })
+    window.addEventListener('resize', onView, { passive: true })
+
+    for (var m = 0; m < run.length; m++) {
+      (function (member) {
+        function onEnter(e) {
+          if (e.pointerType === 'touch') return
+          vx = e.clientX
+          vy = e.clientY
+          write()
+          setLit(true)
+        }
+
+        function onMove(e) {
+          if (e.pointerType === 'touch') return
+          vx = e.clientX
+          vy = e.clientY
+          if (!raf) raf = window.requestAnimationFrame(write)
+        }
+
+        function onLeave(e) {
+          // Crossing into another band of the same run is not leaving it.
+          if (inRun(e.relatedTarget)) return
+          setLit(false)
+        }
+
+        /* The hailstone lands in the band that was actually clicked.
+           Anything that is a control keeps its click to itself. */
+        function onDown(e) {
+          if (e.pointerType === 'touch' || e.button !== 0) return
+          if (e.target && e.target.closest &&
+              e.target.closest('a, button, input, textarea, select, label, [role="button"]')) return
+          var r = member.el.getBoundingClientRect()
+          var ring = document.createElement('span')
+          ring.className = 'fit-strike'
+          ring.setAttribute('aria-hidden', 'true')
+          ring.style.setProperty('--fit-sx', (e.clientX - r.left) + 'px')
+          ring.style.setProperty('--fit-sy', (e.clientY - r.top) + 'px')
+          ring.addEventListener('animationend', function () {
+            if (ring.parentNode) ring.parentNode.removeChild(ring)
+          })
+          member.layer.appendChild(ring)
+        }
+
+        member.el.addEventListener('pointerenter', onEnter)
+        member.el.addEventListener('pointermove', onMove, { passive: true })
+        member.el.addEventListener('pointerleave', onLeave)
+        member.el.addEventListener('pointerdown', onDown)
+
+        /* teardown has to be able to undo this. Nothing of it is visible once
+           the layers are gone, but a live pointerdown keeps appending strike
+           rings to a layer that is no longer in the document — where they
+           never animate, so animationend never fires and nothing ever removes
+           them. One leaked node per click, for the rest of the session. */
+        member.unbind = function () {
+          member.el.removeEventListener('pointerenter', onEnter)
+          member.el.removeEventListener('pointermove', onMove)
+          member.el.removeEventListener('pointerleave', onLeave)
+          member.el.removeEventListener('pointerdown', onDown)
+        }
+
+        lattices.push(member)
+      })(run[m])
+    }
+
+    // One entry per run, not per member: the view listeners and the pending
+    // frame belong to the whole surface.
+    runs.push({
+      unbind: function () {
+        lit = false
+        if (raf) { window.cancelAnimationFrame(raf); raf = null }
+        window.removeEventListener('scroll', onView)
+        window.removeEventListener('resize', onView)
+      },
+    })
+  }
+
+  function initLattice() {
+    if (!FINE || !FINE.matches) return
+    var built = []
+    var cands = document.querySelectorAll('.e-con, .elementor-top-section, section.elementor-section')
+    for (var i = 0; i < cands.length; i++) {
+      var el = cands[i]
+      if (el.getAttribute('data-fit-lattice') === '1') continue
+      var cs = window.getComputedStyle(el)
+      var bg = cs.backgroundImage || ''
+      if (bg.indexOf('Pattern') === -1) continue
+      // Only the outermost section of a nest gets it: a dimple inside a
+      // dimple would double every shadow.
+      if (el.parentElement && el.parentElement.closest('[data-fit-lattice="1"]')) continue
+
+      /* Dark bands only. The white counters band was tried five ways — a
+         shadow-and-rim hollow, brightness, contrast, and registering the
+         copy exactly — and every one of them read as a smudge rather than a
+         deliberate light. The lattice there is dark bronze on near-white:
+         there is no headroom to lift it, so each attempt only dirtied the
+         paper. Where the pattern is pale on near-black, which is almost
+         every band on this site, the same treatment reads like lit metal.
+         So it runs there and leaves the light bands alone. */
+      var rgb = (cs.backgroundColor || '').match(/\d+/g)
+      var lum = rgb && rgb.length >= 3
+        ? (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]) / 255
+        : 0
+      if (lum > 0.5) continue
+
+      el.setAttribute('data-fit-lattice', '1')
+      el.classList.add('fit-lattice')
+      // Recorded so teardown puts back only what this script changed.
+      var posFix = cs.position === 'static'
+      if (posFix) el.style.position = 'relative'
+
+      // The lines are the only light on a dark band, so they are turned up
+      // until the pattern reads like lit metal.
+      el.style.setProperty('--fit-lat-lit', 'rgba(226, 186, 130, .14)')
+      el.style.setProperty('--fit-lat-filter', 'brightness(2.5) saturate(1.3)')
+      // Hand the stylesheet the pattern this section is already painting,
+      // at the size and offset it is already painting it, so the magnified
+      // copy lines up with the real one underneath.
+      el.style.setProperty('--fit-lat-img', bg)
+      el.style.setProperty('--fit-lat-size', cs.backgroundSize)
+      el.style.setProperty('--fit-lat-pos', cs.backgroundPosition)
+
+      var layer = document.createElement('div')
+      layer.className = 'fit-lattice-dimple'
+      layer.setAttribute('aria-hidden', 'true')
+      el.insertBefore(layer, el.firstChild)
+
+      /* The layer sits at z-index 0 so it clears Elementor's overlay. Its
+         siblings are in-flow, which would paint them *below* a positioned
+         layer, so they are lifted into the positioned layer too — being
+         later in the DOM, they land above it. Nothing moves: position
+         relative with no offsets changes no geometry. */
+      var lifted = []
+      for (var c = 0; c < el.children.length; c++) {
+        var kid = el.children[c]
+        if (kid === layer) continue
+        if (window.getComputedStyle(kid).position === 'static') {
+          kid.style.position = 'relative'
+          lifted.push(kid)
+        }
+      }
+
+      built.push({
+        el: el, layer: layer, posFix: posFix, lifted: lifted,
+        run: el.getAttribute('data-fit-run') || ('solo' + i),
+      })
+    }
+
+    // Group the layers by the run initSeams worked out, then bind one hover
+    // surface per run. A band that was never merged is a run of one, so this
+    // is the same code path either way.
+    var byRun = {}
+    for (var g = 0; g < built.length; g++) {
+      var key = built[g].run
+      if (!byRun[key]) byRun[key] = []
+      byRun[key].push(built[g])
+    }
+    for (var runKey in byRun) {
+      if (Object.prototype.hasOwnProperty.call(byRun, runKey)) bindLattice(byRun[runKey])
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+   * 8. Teardown: the visitor turned reduced motion on mid-session.
+   * ---------------------------------------------------------------------- */
+  var LAT_PROPS = ['--fit-lat-lit', '--fit-lat-filter', '--fit-lat-img', '--fit-lat-size', '--fit-lat-pos']
+
   function teardown() {
     html.classList.remove('fit-motion')
     if (io) { io.disconnect(); io = null }
-    for (var i = 0; i < tilted.length; i++) tilted[i].style.transform = ''
+
+    for (var i = 0; i < tilted.length; i++) {
+      tilted[i].unbind()
+      tilted[i].el.style.transform = ''
+    }
+    tilted = []
+
+    for (var r = 0; r < runs.length; r++) runs[r].unbind()
+    runs = []
+
+    // Put the section back the way it was found: the listeners off, the
+    // classes and custom properties gone, and position restored only on the
+    // elements this script actually moved off static.
+    for (var j = 0; j < lattices.length; j++) {
+      var m = lattices[j]
+      if (m.unbind) m.unbind()
+      m.el.classList.remove('is-dimpled')
+      m.el.classList.remove('fit-lattice')
+      m.el.removeAttribute('data-fit-lattice')
+      for (var p = 0; p < LAT_PROPS.length; p++) m.el.style.removeProperty(LAT_PROPS[p])
+      if (m.posFix) m.el.style.position = ''
+      for (var k = 0; k < m.lifted.length; k++) m.lifted[k].style.position = ''
+      if (m.layer.parentNode) m.layer.parentNode.removeChild(m.layer)
+    }
+    lattices = []
   }
 
   /* ------------------------------------------------------------------------
@@ -471,12 +875,39 @@
    * ---------------------------------------------------------------------- */
   function boot() {
     initTransitions()
+    /* Not motion: a seam is wrong whether or not the visitor wants movement,
+       so this and its listeners sit before the reduced-motion return.
+
+       Both inputs to the offset are viewport-dependent — the tile is 20% of
+       the section's width, and the carry is the previous band's measured
+       height — so a pixel value is only correct at the width it was measured
+       at. Without this, a window drag, a zoom step or a phone rotation
+       reinstates the exact tile break initSeams exists to remove, and it
+       stays broken until the next navigation. `load` covers the other half:
+       bands are measured at DOMContentLoaded, before late images and the
+       font swap have settled their heights.
+
+       Known limit, deliberately left: initSeams re-assigns data-fit-run, but
+       bindLattice captured its groups at boot, so a run that newly forms or
+       breaks at a different width keeps its old hover grouping until reload.
+       That is a glow stopping at one join, not a visible break in the page. */
+    initSeams()
+    var seamT = null
+    function reseam() {
+      clearTimeout(seamT)
+      seamT = setTimeout(initSeams, 150)
+    }
+    window.addEventListener('resize', reseam, { passive: true })
+    window.addEventListener('orientationchange', reseam)
+    window.addEventListener('load', reseam)
+
     if (reduced()) return
 
     var found = tagTargets()
     initHero()
     initScroll()
     initTilt(found.cards)
+    initLattice()
 
     // Arriving under the curtain: hide now (the curtain covers it) and mark
     // the first screen a beat later, so it rises as the roofline lifts.

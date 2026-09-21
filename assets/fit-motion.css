@@ -82,11 +82,32 @@ html.fit-leaving body {
 html.fit-leaving .fit-progress,
 html.fit-leaving .fit-scroll-cue { opacity: 0 !important; }
 /* The chat launcher sits at the largest z-index a browser accepts, so the
-   curtain cannot cover it; it steps out for the second the curtain is up. */
+   curtain cannot cover it; it steps out for the second the curtain is up.
+
+   The arriving side hides it with an animation, deliberately without
+   `forwards`. html.fit-arriving is put on by the inline guard in <head>, and
+   the only thing that ever takes it off again is fit-motion.js — so if that
+   script is blocked, throws, or never arrives, the class stays for the whole
+   page view. A static rule would then hide the chat launcher until the
+   visitor navigated again, on a storm-restoration site where that launcher
+   is a lead. When the animation ends the element simply goes back to its own
+   visibility, so the failure mode heals itself. The animation is also what
+   beats the widget's inline styles now that the !important is gone:
+   animations outrank inline declarations in the cascade.
+
+   The leaving side keeps the plain rule — it has to hold for as long as the
+   navigation takes, however long that is, and fit-motion.js drops the class
+   after three seconds if the navigation never lands. */
 html.fit-arriving #chat-widget-push-to-talk,
 html.fit-arriving #welcomeMessages,
 html.fit-arriving #welcomeMessagesCross,
-html.fit-arriving iframe[src*="fastbots" i],
+html.fit-arriving iframe[src*="fastbots" i] {
+  animation: fitChatStepOut 1.1s linear;
+}
+@keyframes fitChatStepOut {
+  from { visibility: hidden; }
+  to   { visibility: hidden; }
+}
 html.fit-leaving #chat-widget-push-to-talk,
 html.fit-leaving #welcomeMessages,
 html.fit-leaving #welcomeMessagesCross,
@@ -146,10 +167,9 @@ html.fit-motion [data-fit-reveal]:not(.fit-in) {
   opacity: 0;
   transform: translate3d(0, 26px, 0);
 }
-html.fit-motion [data-fit-reveal="left"]:not(.fit-in)  { transform: translate3d(-30px, 0, 0); }
-html.fit-motion [data-fit-reveal="right"]:not(.fit-in) { transform: translate3d(30px, 0, 0); }
+/* "zoom" is the only direction the script ever writes (fit-motion.js tags a
+   target with 'zoom' or ''), so it is the only one that gets a rule. */
 html.fit-motion [data-fit-reveal="zoom"]:not(.fit-in)  { transform: scale(.955); }
-html.fit-motion [data-fit-reveal="fade"]:not(.fit-in)  { transform: none; }
 /* Once in, hover must answer at hover speed, not with the reveal's stagger. */
 html.fit-motion .fit-tile.fit-in {
   transition: transform .4s var(--fit-ease), opacity .74s var(--fit-ease);
@@ -275,10 +295,14 @@ html.fit-motion .elementor-widget-counter[data-fit-reveal]:not(.fit-in) { transf
     position: relative;
     overflow: hidden; /* the sill follows the card's rounded corners… */
     overflow: clip;   /* …without making the card a scroll container */
+    /* No will-change here. It was held permanently and bought a compositing
+       layer per card for the life of the page — 8 of them on the homepage,
+       with the pointer nowhere near the grid. Chromium promotes the card on
+       hover anyway, from both this transition and the JS tilt's 3D
+       transform, and releases the layer again on leave. */
     transition:
       transform  .45s var(--fit-ease),
       box-shadow .45s var(--fit-ease);
-    will-change: transform;
   }
   html.fit-motion .fit-card.fit-in {
     transition:
@@ -384,9 +408,123 @@ html.fit-motion .elementor-widget-counter[data-fit-reveal]:not(.fit-in) { transf
 }
 
 /* ==========================================================================
-   7. Respect the visitor. This wins over everything above.
+   6b. Seams between stacked pattern bands.
+
+   Two sections that paint the same pattern on the same ground should read as
+   one band. Elementor gives each its own overlay strength (0.7 on one, 0.9
+   on the next) and restarts the tiling at every section boundary, so a flat
+   tonal step and a broken lattice show across the join. The script matches
+   the overlay to the first section of the run and offsets the tiling to
+   continue through it; this rule is the only way to reach ::before, whose
+   opacity Elementor sets at a specificity a plain class cannot beat.
+   ========================================================================== */
+.fit-seam::before { opacity: var(--fit-seam-op) !important; }
+
+/* ==========================================================================
+   7. The lattice dimple.
+
+   The bronze diamond pattern is the background of ~42 sections across the
+   site. Under the pointer it presses in: a shadow crescent above the cursor
+   and a bronze catch below it, because the light on this site comes from the
+   top and that pair is what makes a flat surface read as a hollow rather
+   than a glow. Inside the hollow the lattice is drawn again and magnified,
+   so the diamonds bow outward like a net being pushed into.
+
+   A click lands like a hailstone — a bronze ring cracking outward. This is a
+   storm-restoration roofer; hail is the thing their phone rings about.
+
+   Everything is painted by one absolutely-positioned child at z-index 0 (see
+   the note on the rule below for why not -1), so it sits above the section's
+   own background and below every word on it. Pointer coordinates arrive as
+   two custom properties; nothing here reads layout. Adjacent bands that the
+   script merged into one run are lit together, so the glow crosses the join
+   as one circle instead of being sliced in half at it.
+   ========================================================================== */
+.fit-lattice { position: relative; }
+
+/* z-index 0, not -1. Elementor paints its background overlay on the
+   section's own ::before — position:absolute, z-index:auto — and a child at
+   -1 is drawn underneath it, so on every dark band the dimple was rendered
+   and then covered by opaque black. At 0, and as the first child, it paints
+   after that overlay; the script lifts the section's real children to
+   position:relative so they still paint above this. */
+.fit-lattice-dimple {
+  --fit-lat-r: 118px;
+  --fit-lat-lit: rgba(201, 162, 110, .4);
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .45s var(--fit-ease);
+}
+.fit-lattice.is-dimpled .fit-lattice-dimple { opacity: 1; }
+@media (max-width: 767px) { .fit-lattice-dimple { --fit-lat-r: 120px; } }
+
+/* The hollow itself. */
+.fit-lattice-dimple::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* A soft warm pool, nothing more. Earlier versions drew a shadow crescent
+     and a rim to fake a hollow; an even ring reads as a halo and the shadow
+     over a white band reads as dirt. The depth now comes from the lattice
+     itself in ::after — the light pool only warms the ground under it. */
+  background:
+    radial-gradient(circle var(--fit-lat-r) at var(--fit-mx, 50%) var(--fit-my, 50%),
+      var(--fit-lat-lit) 0%, transparent 72%);
+}
+
+/* The lattice again, magnified around the pointer and masked to the hollow. */
+.fit-lattice-dimple::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--fit-lat-img);
+  background-size: var(--fit-lat-size, 20% auto);
+  background-position: var(--fit-lat-pos, 0 0);
+  background-repeat: repeat;
+  /* Barely magnified — at 1.08 the doubled lines read as blur, not depth,
+     and 1.02 is as much lift as a dark ground will swallow. The depth comes
+     from the bronze catching light instead: inside the disc the lattice is
+     redrawn with a filter that makes it stand out against its own ground.
+     Only dark bands get any of this (see fit-motion.js) — on the white
+     counters band the lattice is dark bronze on near-white, with no headroom
+     to lift, and every attempt at it read as a smudge. */
+  transform: scale(1.02);
+  transform-origin: var(--fit-mx, 50%) var(--fit-my, 50%);
+  filter: var(--fit-lat-filter, brightness(2.3) saturate(1.35));
+  -webkit-mask-image: radial-gradient(circle var(--fit-lat-r) at var(--fit-mx, 50%) var(--fit-my, 50%),
+    #000 0%, rgba(0, 0, 0, .88) 34%, transparent 78%);
+  mask-image: radial-gradient(circle var(--fit-lat-r) at var(--fit-mx, 50%) var(--fit-my, 50%),
+    #000 0%, rgba(0, 0, 0, .88) 34%, transparent 78%);
+}
+
+/* The hailstone strike. Removed on animationend, so none of these persist. */
+.fit-strike {
+  position: absolute;
+  left: var(--fit-sx, 50%);
+  top: var(--fit-sy, 50%);
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  border: 3px solid rgba(201, 162, 110, .6);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: fitStrike .8s cubic-bezier(.22, .61, .36, 1) forwards;
+}
+@keyframes fitStrike {
+  from { width: 10px;  height: 10px;  opacity: .95; border-width: 3px; }
+  to   { width: 460px; height: 460px; opacity: 0;   border-width: 1px; }
+}
+
+/* ==========================================================================
+   8. Respect the visitor. This wins over everything above.
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
+  .fit-lattice-dimple { display: none !important; }
+  .fit-strike { display: none !important; animation: none !important; }
   html.fit-arriving::before,
   html.fit-leaving::after { display: none !important; animation: none !important; }
   html.fit-leaving body { opacity: 1 !important; }

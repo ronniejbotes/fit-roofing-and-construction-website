@@ -226,10 +226,127 @@ facts. Their other suggestions were declined on the house rules — trust chips,
 counters, founding year, client logos, testimonials and geo pages all need numbers or
 claims this business has not given us.
 
+### The lattice
+
+The bronze diamond pattern behind roughly 42 sections lights up under the pointer, like a
+work lamp moving across a metal roof: inside a soft disc the lattice is redrawn with its
+brightness turned up, over a warm pool. A click lands a hailstone — a bronze ring cracking
+outward and then removing itself. Storm work is what this company's phone rings about.
+
+**It runs on the dark bands only.** The white counters band was tried five ways — a
+shadow-and-rim hollow, brightness, contrast, and registering the magnified copy exactly —
+and every one of them read as a smudge rather than a deliberate light. The lattice there is
+dark bronze on near-white, so there is no headroom to lift it and each attempt only dirtied
+the paper. Where the pattern is pale on near-black, which is almost every band on the site,
+the same treatment reads like lit metal. It runs there and leaves the light bands alone.
+
+Two things that were not obvious, and cost most of the time. Elementor paints each section's
+background overlay on the section's **own `::before`** (`position: absolute`, `z-index: auto`),
+so a child at `z-index: -1` is drawn and then covered — the effect was invisible on every
+dark band until the layer moved to `z-index: 0` and the section's real children were lifted
+to `position: relative` so they still paint above it. And magnifying the copy at `1.08`
+doubles every line into a blur rather than reading as depth; it sits at `1.02` now.
+
+**A merged run is one hover surface.** Each layer is clipped to its own section, so a glow
+driven only by the band under the pointer stopped dead at an internal boundary and came out
+sliced in half — the join looked broken precisely *because* the two bands had been merged.
+Every layer in a run now receives the same point on the page, expressed relative to its own
+box, and draws whatever part of the circle falls inside it; the pieces line up into one
+circle across the join. Coordinates are held in viewport space for that reason, and
+crossing from one band of a run into another is not treated as leaving it. A band that was
+never merged is simply a run of one, so it is the same code path.
+
+Precise pointers only. Nothing is built at all on a touch screen or under
+`prefers-reduced-motion`, and a mid-session switch to reduced motion removes the layers.
+
+### Seams between stacked pattern bands
+
+Two sections painting the same pattern on the same ground are meant to read as one band.
+Elementor makes that fail twice over: each section carries **its own background-overlay
+opacity** (0.7 on "More Than Just Roofing", 0.9 on "Built the F.I.T. Way") and each
+**restarts the tiling from its own box**. The result was a flat tonal step straight across
+the page with the lattice jumping at the join. The overlay was the visible one — the tile
+break is subtle by comparison.
+
+Both are now repaired at runtime: the overlay is matched to the first section of the run,
+and the tiling is offset to continue through the boundary (the second section starts its
+tile at `-47.38px` rather than re-centring). Because Elementor sets that opacity at a
+specificity a plain class cannot beat, the match is applied through `.fit-seam::before` with
+a custom property — the one `!important` in this layer, and the reason it is there.
+
+**Only sections that share a ground are joined.** A dark band meeting the white counters
+band is a deliberate change of surface, so those two boundaries are left exactly as they
+are. This runs before the reduced-motion return: a seam is wrong whether or not the visitor
+wants movement.
+
+### Corrections from the second review round
+
+A second agent review (21 September 2026 — correctness, performance, cruft, graceful
+degradation and integration, each finding adversarially verified before being accepted)
+confirmed fourteen findings that collapse to seven distinct defects. All seven are fixed,
+and each was re-measured afterwards rather than reasoned about.
+
+- **The seam offsets were a boot-time snapshot.** Both inputs are viewport-dependent — the
+  tile is 20% of the section's width, the carry is the previous band's measured height — so
+  a window drag, a zoom step or a phone rotation reinstated the exact tile break the feature
+  exists to remove, and it stayed broken until the next navigation. Measured 80 px out on a
+  180 px tile on `/about/`: nearly half a tile, the worst a repeating grid can be. `initSeams`
+  now clears its own previous pass and re-runs, debounced, on `resize`, `orientationchange`
+  and `load` — the last because bands are measured at `DOMContentLoaded`, before images and
+  the font swap have settled their heights. Clearing first is load-bearing rather than tidy:
+  the origin is read back from the computed background-position, so a stale inline pixel
+  value would otherwise be mistaken for the stylesheet's own.
+- **The lattice glow did not follow a scroll.** Chrome dispatches no `pointermove` for a
+  wheel scroll, so the coordinates froze while the band slid out from under a stationary
+  cursor and the glow was left behind by exactly the scroll distance — while the band stayed
+  lit. That is the most ordinary interaction on the site: reading a page with the pointer
+  resting on it. A `lit`-guarded `scroll`/`resize` handler per run redraws it now; an unlit
+  run costs one predicate per event.
+- **The magnified hover copy was out of register on merged bands.** `--fit-lat-pos` is a
+  snapshot taken once, so any offset applied afterwards left the copy on a different grid
+  from the pattern underneath — which reads as blur rather than depth. Four of the five
+  bands of `/about/` were out. It is refreshed at the end of every seam pass now. The two
+  review lenses contradicted each other on this one; it was settled by measuring, not by
+  preferring a reviewer.
+- **The leaving curtain had no failsafe.** It is opaque, covers the viewport and swallows
+  clicks by design, and only a new document took it away. A navigation that never lands —
+  Esc, the Stop button, a dropped connection, a 204, an unfiltered download — replaces
+  nothing and fires no `pageshow`, so the visitor was left at a bronze wall with no way out
+  but a manual reload. It lifts itself after three seconds now, mirroring the failsafe the
+  arriving side always had.
+- **`html.fit-arriving` could hide the chat launcher for a whole page view.** The class is
+  set by the inline `<head>` guard, and only `fit-motion.js` ever takes it off — so a
+  blocked or broken script left a static `visibility: hidden` rule hiding the launcher until
+  the visitor navigated again. That is a lost lead on a storm-restoration site, and a breach
+  of this layer's own contract that no JS means the plain mirror. The arriving side hides it
+  with a non-`forwards` animation now, so it comes back by itself when the animation ends.
+  An animation is also what beats the widget's inline styles now the `!important` is gone.
+- **`teardown()` undid almost nothing.** It removed the layers but left all four listeners
+  per band bound, so a click after a mid-session switch to reduced motion appended a strike
+  ring to a detached layer — where it never animates, so `animationend` never fires and
+  nothing ever removes it. One leaked node per click for the rest of the session. The
+  handlers are named and unbound now, and the section is put back as it was found: class,
+  attribute, the five custom properties, and `position` restored only on the elements this
+  script actually moved off `static`. The same gap in the card tilt is closed the same way.
+- **`fit-in-now` was never removed.** Its `transition: none !important` is unconditional, so
+  a card a keyboard user tabbed onto below the fold lost its hover lift and its tilt
+  spring-back for the life of the page. The revealed style is flushed with transitions still
+  off and the class dropped in the same tick — it cannot be deferred to a rAF, which runs
+  before style recalc and would let the fade back in.
+
+Two smaller ones in the same pass: `will-change: transform` sat permanently on every
+`.fit-card`, holding a compositing layer per card (8 on `/`) with the pointer nowhere near
+them — Chromium promotes on hover by itself and releases afterwards; and `initHero` used
+`return` where `continue` was meant, abandoning the hero search at the first candidate that
+had no generated Elementor class. Dead weight removed: two custom properties declared and
+never read, three reveal-direction rules for values the script never writes (it only ever
+writes `zoom` or nothing), and three comments describing a design that had been replaced.
+
 ## Verified
 
-`npm run motion:qa` and `npm run motion:qa:keys` drive it in Chromium (last run 20
-September 2026, after a five-lens agent review — JS, CSS, accessibility, brand, visual —
+`npm run motion:qa` and `npm run motion:qa:keys` drive it in Chromium (last run 21
+September 2026, after two agent review rounds — the first on JS, CSS, accessibility, brand
+and visual, the second on correctness, performance, cruft, degradation and integration —
 whose confirmed findings are all fixed):
 
 - Desktop `/`: gate present, scroll refused behind it, copy correct, clip plays, gate removes
@@ -264,6 +381,16 @@ whose confirmed findings are all fixed):
   requests are the analytics beacons `tools/browser.mjs` blocks on purpose, and — on some
   runs — the logo PNG as `net::ERR_ABORTED`, which is Chromium cancelling its own request
   and is recorded in MIRROR.md on the untouched mirror too.
+- The second round's seven defects were each re-measured after the fix. Seam continuity
+  0.00 px of error across every join on `/` and `/about/`, both at 1440 and after a resize
+  to 900 — against 49.81 px on `/` and up to 80.37 px on `/about/` before. The lattice glow
+  0.0 px from the cursor after a 300 px wheel scroll, against 302 px. `--fit-lat-pos` in
+  register on all ten bands; five were out. The leaving curtain gone by 3.4 s on an aborted
+  navigation. The chat launcher visible again 1.6 s after arrival with `fit-motion.js`
+  blocked and `fit-arriving` still stuck on. `will-change: auto` on all 8 cards at rest.
+  After a mid-session teardown: layers, class, attribute and custom properties all gone, and
+  0 strike rings leaked by a click. A keyboard focus below the fold reveals its target at
+  opacity 1 with `fit-in-now` off and its 0.74 s transitions restored.
 - `npm run verify`: 48/48 routes, 0 unresolved references, 0 origin leaks.
   `npm run audit`: 45 pages, 0 failed requests, 0 JavaScript errors.
 - `npm run motion:remove` restores every page: `index.html` comes back byte-identical to
