@@ -1,0 +1,70 @@
+# Apache / LiteSpeed configuration for the static mirror.
+#
+# WHY THIS FILE EXISTS
+# _redirects is Netlify / Cloudflare Pages syntax. Hostinger runs LiteSpeed,
+# which never reads it — on 21 September 2026 all 44 rules in _redirects were
+# confirmed dead on the live host, every one answering 404, and the custom
+# 404 page was not being served either. This file is the same rule set in the
+# syntax this host does read. _redirects stays as the source of truth and for
+# tools/serve.mjs; the two must be kept in step.
+#
+# Order matters: first match wins, so specific rules sit above the patterns.
+# RewriteRule sees the path WITHOUT its leading slash.
+
+# The mirror's own 404 template, with a real 404 status.
+ErrorDocument 404 /404.html
+
+# Directory listings are not part of the site.
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# ---- Old service URLs -------------------------------------------------------
+# The service pages used to live under /services/. Still linked from /blog/
+# on the old site and indexed under these paths.
+RewriteRule ^services/attics/?$                 /attics-texas/                [R=301,L]
+RewriteRule ^services/commercial-roofing/?$     /commercial-roofing-texas/    [R=301,L]
+RewriteRule ^services/gutter-installation/?$    /gutter-installation-texas/   [R=301,L]
+RewriteRule ^services/roof-installation/?$      /roof-installation-texas/     [R=301,L]
+RewriteRule ^services/roof-repair/?$            /roof-repair-texas/           [R=301,L]
+RewriteRule ^services/storm-repair/?$           /storm-repair-texas/          [R=301,L]
+RewriteRule ^services/skylight-installation/?$  /skylight-installation-texas/ [R=301,L]
+RewriteRule ^services/roof-replacement/?$       /roof-replacement-texas/      [R=301,L]
+
+# ---- Archives Yoast has switched off ----------------------------------------
+# Both real author archives go to the homepage. Unknown authors 404 on the old
+# site, so there is deliberately no /author/* catch-all.
+RewriteRule ^author/p3akl3ads/?$  /  [R=301,L]
+RewriteRule ^author/seodev2/?$    /  [R=301,L]
+
+# Date archives: every 2026 archive (year, month, day) goes to the homepage.
+# 2026 is the only year with posts. Anchored, so /wp-content/uploads/2026/...
+# is untouched.
+RewriteRule ^2026(/.*)?$  /  [R=301,L]
+
+# The old default-category path, and the retired "home" slug. /home carried the
+# header logo on every page until 856d749.
+RewriteRule ^category/uncategorized/?$  /uncategorized/  [R=301,L]
+RewriteRule ^home/?$                    /                [R=301,L]
+
+# ---- Feeds, switched off ----------------------------------------------------
+# /comments/feed/ must stay above the /:slug/feed/ pattern, or it would be sent
+# to /comments/, which does not exist.
+RewriteRule ^feed/atom/?$      /       [R=301,L]
+RewriteRule ^feed/rss2/?$      /feed/  [R=301,L]
+RewriteRule ^feed/?$           /       [R=301,L]
+RewriteRule ^rss/?$            /feed/  [R=301,L]
+RewriteRule ^comments/feed/?$  /       [R=301,L]
+RewriteRule ^tag/([^/]+)/feed/?$  /tag/$1/  [R=301,L]
+RewriteRule ^([^/]+)/feed/?$      /$1/      [R=301,L]
+
+# ---- WordPress core ---------------------------------------------------------
+RewriteRule ^sitemap\.xml$     /sitemap_index.xml  [R=301,L]
+RewriteRule ^wp-sitemap\.xml$  /sitemap_index.xml  [R=301,L]
+RewriteRule ^index\.php$       /                   [R=301,L]
+RewriteRule ^blog/page/1/?$    /blog/              [R=301,L]
+
+# The old site answers this one 302, not 301. Kept as it is.
+RewriteRule ^favicon\.ico$  /wp-content/uploads/2026/03/cropped-Gold-house-roof-and-windows-icon-1-32x32.png  [R=302,L]
+</IfModule>
