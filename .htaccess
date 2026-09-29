@@ -69,6 +69,14 @@ RewriteRule ^services/storm-repair/?$           /storm-repair-texas/          [R
 RewriteRule ^services/skylight-installation/?$  /skylight-installation-texas/ [R=301,L]
 RewriteRule ^services/roof-replacement/?$       /roof-replacement-texas/      [R=301,L]
 
+# ---- Old slugs the WordPress site redirected --------------------------------
+# Both were stored redirects on the old site, not WordPress guessing from a
+# prefix: on 17 September 2026 each answered 301 to the page below, while
+# /locati/ and /forth/ answered 404. Neither made it into _redirects, so both
+# have answered 404 since the move. /forth-worth/ is the misspelt city slug.
+RewriteRule ^location/?$     /roofing-locations/  [R=301,L]
+RewriteRule ^forth-worth/?$  /fort-worth/         [R=301,L]
+
 # ---- Archives Yoast has switched off ----------------------------------------
 # Both real author archives go to the homepage. Unknown authors 404 on the old
 # site, so there is deliberately no /author/* catch-all.

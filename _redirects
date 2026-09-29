@@ -38,6 +38,15 @@
 /services/roof-replacement        /roof-replacement-texas/      301
 /services/roof-replacement/       /roof-replacement-texas/      301
 
+# ---- Old slugs the WordPress site redirected ---------------------------------
+# Stored redirects on the old site, not slug guessing: on 17 September 2026
+# each answered 301 to the page named here. Missed when this file was first
+# written, so both 404ed after the move; added 29 September 2026.
+/location                 /roofing-locations/  301
+/location/                /roofing-locations/  301
+/forth-worth              /fort-worth/         301
+/forth-worth/             /fort-worth/         301
+
 # ---- Archives Yoast has switched off -----------------------------------------
 # Author archives: both real authors 301 to the homepage. Unknown authors 404
 # on live, so there is deliberately no /author/* pattern.
