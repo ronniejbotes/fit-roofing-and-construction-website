@@ -19,20 +19,37 @@ export const CHROME = process.env.CHROME || join(process.env.USERPROFILE || proc
  * Only the beacons are blocked. The tag scripts themselves still load and run,
  * so anything GTM does to a page still happens on both sides and is still
  * compared; what is lost is only the hit being recorded.
+ *
+ * The first version of this list missed https://www.google.com/g/collect,
+ * which is where this site's GA4 hits actually go. Every run that called
+ * blockAnalytics() therefore still sent its page views, and on 17 September
+ * 2026 the form tests' form_start, form_submit and generate_lead events, into
+ * both GA4 properties (G-TQN34BCYN7 in the HTML, G-WQQB7G3QBE injected by the
+ * GTM container). Google moves collection between google-analytics.com,
+ * analytics.google.com, region1.* hosts and www.google.com, so the patterns
+ * key on the collection path on any Google host, not on a list of hosts.
  */
+const GOOGLE = String.raw`([a-z0-9-]+\.)*(google-analytics\.com|googleadservices\.com|doubleclick\.net|google(\.com?)?(\.[a-z]{2})?)`
 const BEACONS = [
-  /^https:\/\/([a-z0-9-]+\.)*google-analytics\.com\/(g\/)?collect/,
-  /^https:\/\/analytics\.google\.com\/g\/collect/,
-  /^https:\/\/stats\.g\.doubleclick\.net\//,
-  /^https:\/\/googleads\.g\.doubleclick\.net\//,
-  /^https:\/\/www\.google\.com\/(pagead|ccm)\//,
-  /^https:\/\/www\.googletagmanager\.com\/(td|a)\?/,
-  /^https:\/\/(www\.)?facebook\.com\/tr/,
-  /^https:\/\/([a-z0-9-]+\.)*clarity\.ms\/collect/,
+  // GA4 /g/collect; Universal Analytics /collect, /j/collect and /r/collect;
+  // the Measurement Protocol's /mp/collect. On any Google host.
+  new RegExp(String.raw`^https?:\/\/${GOOGLE}\/((g|j|r|mp)\/)?collect([/?#]|$)`),
+  // Ads, remarketing and conversion pings that GA4 and GTM send alongside.
+  new RegExp(String.raw`^https?:\/\/${GOOGLE}\/(pagead|ccm|rmkt|measurement|ads\/ga-audiences)([/?#]|$)`),
+  /^https?:\/\/([a-z0-9-]+\.)*doubleclick\.net\//,
+  // Tag Manager's own pings. gtm.js and gtag/js are scripts, not hits: they load.
+  /^https?:\/\/www\.googletagmanager\.com\/(td|a)\?/,
+  /^https?:\/\/(www\.)?facebook\.com\/tr/,
+  /^https?:\/\/([a-z0-9-]+\.)*clarity\.ms\/collect/,
 ]
 
+/** True for a URL whose request would record a hit in someone's analytics. */
+export function isBeacon(href) {
+  return BEACONS.some((re) => re.test(href))
+}
+
 export async function blockAnalytics(ctx) {
-  await ctx.route((url) => BEACONS.some((re) => re.test(url.href)), (route) => route.abort())
+  await ctx.route((url) => isBeacon(url.href), (route) => route.abort())
 }
 
 /**
