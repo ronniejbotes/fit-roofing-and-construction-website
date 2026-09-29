@@ -57,6 +57,17 @@ Options -Indexes
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
+# ---- One host ----------------------------------------------------------------
+# Every canonical tag, every sitemap <loc>, robots.txt and llms.txt name
+# https://fitroofingco.com, but www.fitroofingco.com answered every page with
+# a 200 of its own, so each page could be fetched at two hosts. www now 301s
+# to the bare domain, path and query kept. The form handler is left out on
+# purpose: a 301 turns a POST into a GET, and the enquiry would be lost.
+# No _redirects twin: tools/serve.mjs serves a single host.
+RewriteCond %{HTTP_HOST} ^www\.fitroofingco\.com\.?(:[0-9]+)?$ [NC]
+RewriteCond %{REQUEST_URI} !^/_forms/submit\.php$
+RewriteRule ^ https://fitroofingco.com%{REQUEST_URI} [R=301,L]
+
 # ---- Old service URLs -------------------------------------------------------
 # The service pages used to live under /services/. Still linked from /blog/
 # on the old site and indexed under these paths.
