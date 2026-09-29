@@ -25,6 +25,35 @@ Options -Indexes
     RewriteRule ^_forms/leads(/.*)?$ - [F,L]
 </IfModule>
 
+# The repo root is the web root, so every file committed here is published at
+# the client's domain unless it is refused. Our migration notes, the README,
+# the route manifest, the Node tooling and its manifests are not part of the
+# site, and until this block all of them answered 200 on fitroofingco.com.
+# Refused with the same [F] as the lock above: a 403, and no redirect.
+# Still served: robots.txt, llms.txt, the three sitemaps, 404.html,
+# /_forms/submit.php, every page, and everything under /wp-content/,
+# /wp-includes/ and /assets/ (including the lottie .json and the sitemap .xsl).
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Markdown and Node modules, at any depth. No page or asset uses either;
+    # if the site ever ships an .mjs module, narrow this rule first.
+    RewriteRule \.(md|mjs)$ - [NC,F,L]
+    # The tooling folder, and working folders a folder-based upload would carry.
+    RewriteRule ^(tools|node_modules|shots)(/|$) - [F,L]
+    # Root manifests: the npm files and the capture's route list.
+    RewriteRule ^(package|package-lock)\.json$ - [F,L]
+    RewriteRule ^routes\.txt$ - [F,L]
+    # Anything whose first segment starts with an underscore is ours:
+    # _redirects (Netlify syntax this host never reads), the gitignored _raw/
+    # capture and _*.mjs probes. The one exception is the enquiry handler.
+    RewriteCond %{REQUEST_URI} !^/_forms/submit\.php$
+    RewriteRule ^_ - [F,L]
+    # Dot files and folders: .git/, .gitignore, .gitattributes, .nojekyll.
+    # /.well-known/ stays open, because certificate renewal can depend on it.
+    RewriteCond %{REQUEST_URI} !^/\.well-known/
+    RewriteRule (^|/)\. - [F,L]
+</IfModule>
+
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
