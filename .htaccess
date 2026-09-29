@@ -123,4 +123,26 @@ RewriteRule ^blog/page/1/?$    /blog/              [R=301,L]
 
 # The old site answers this one 302, not 301. Kept as it is.
 RewriteRule ^favicon\.ico$  /wp-content/uploads/2026/03/cropped-Gold-house-roof-and-windows-icon-1-32x32.png  [R=302,L]
+
+# ---- Old attachment pages -----------------------------------------------------
+# WordPress gave each uploaded image an address of its own and 301'd it to the
+# image file. These eleven were observed doing that on 17 September 2026; every
+# target is a file in this repo, matched case-exactly. No other attachment
+# address was recorded, so there is deliberately no pattern here. The exact
+# ^home/?$ rule above does not catch these.
+RewriteRule ^home/premium_residential_roof_hero_image_5360bc36-drkzuqw1/?$  /wp-content/uploads/2026/03/Premium_residential_roof_hero_image_5360bc36-DRkZuqw1.png  [R=301,L]
+RewriteRule ^home/pattern_1760821232732-bxrkkn_8/?$  /wp-content/uploads/2026/03/Pattern_1760821232732-BxRKkN_8-scaled.png  [R=301,L]
+RewriteRule ^home/roof_replacement_detail_work_d3d666d5-cjhl_dro/?$  /wp-content/uploads/2026/03/Roof_replacement_detail_work_d3d666d5-CJHl_DrO.png  [R=301,L]
+RewriteRule ^home/roof_repair_in_progress_e9b02712-b77g39ah/?$  /wp-content/uploads/2026/03/Roof_repair_in_progress_e9b02712-B77g39AH.png  [R=301,L]
+RewriteRule ^home/storm_damaged_roof_assessment_56e98263-ccsze9jj/?$  /wp-content/uploads/2026/03/Storm_damaged_roof_assessment_56e98263-CCSZe9JJ.png  [R=301,L]
+RewriteRule ^home/gutter_installation_work_b001c1b0-yxarrtoo/?$  /wp-content/uploads/2026/03/Gutter_installation_work_b001c1b0-yXaRrtoo.png  [R=301,L]
+RewriteRule ^home/pattern_4_1760819902693-d2fjie4a/?$  /wp-content/uploads/2026/03/Pattern_4_1760819902693-D2fJIe4A-scaled.png  [R=301,L]
+RewriteRule ^about/profile-pic_2_1760911175225-bwjbgxcy/?$  /wp-content/uploads/2026/03/Profile-Pic_2_1760911175225-BWjbGxcy.png  [R=301,L]
+RewriteRule ^roofing-services-texas/roofing-services-dallas/?$  /wp-content/uploads/2026/03/roofing-services-dallas.jpg  [R=301,L]
+RewriteRule ^roofing-services-texas/preview-of-the-roof-installed-in-dallas/?$  /wp-content/uploads/2026/03/preview-of-the-roof-installed-in-dallas.jpg  [R=301,L]
+# The attachment ID form. The trailing ? drops the query from the target.
+# Not in _redirects: its parser reads three fields and ignores queries, so a
+# query rule there would be taken as a redirect of the homepage itself.
+RewriteCond %{QUERY_STRING} ^attachment_id=51$
+RewriteRule ^$  /wp-content/uploads/2026/03/Stamp_1760808394080-LCHykHC-.png?  [R=301,L]
 </IfModule>

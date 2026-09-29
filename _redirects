@@ -90,3 +90,28 @@
 /blog/page/1          /blog/              301
 /blog/page/1/         /blog/              301
 /favicon.ico          /wp-content/uploads/2026/03/cropped-Gold-house-roof-and-windows-icon-1-32x32.png  302
+
+# ---- Old attachment pages ------------------------------------------------------
+# WordPress 301ed each image's own address to the image file; these ten were
+# observed doing so on 17 September 2026. Added 29 September 2026. The
+# /?attachment_id=51 form is in .htaccess only: this parser ignores queries.
+/home/premium_residential_roof_hero_image_5360bc36-drkzuqw1  /wp-content/uploads/2026/03/Premium_residential_roof_hero_image_5360bc36-DRkZuqw1.png  301
+/home/premium_residential_roof_hero_image_5360bc36-drkzuqw1/  /wp-content/uploads/2026/03/Premium_residential_roof_hero_image_5360bc36-DRkZuqw1.png  301
+/home/pattern_1760821232732-bxrkkn_8  /wp-content/uploads/2026/03/Pattern_1760821232732-BxRKkN_8-scaled.png  301
+/home/pattern_1760821232732-bxrkkn_8/  /wp-content/uploads/2026/03/Pattern_1760821232732-BxRKkN_8-scaled.png  301
+/home/roof_replacement_detail_work_d3d666d5-cjhl_dro  /wp-content/uploads/2026/03/Roof_replacement_detail_work_d3d666d5-CJHl_DrO.png  301
+/home/roof_replacement_detail_work_d3d666d5-cjhl_dro/  /wp-content/uploads/2026/03/Roof_replacement_detail_work_d3d666d5-CJHl_DrO.png  301
+/home/roof_repair_in_progress_e9b02712-b77g39ah  /wp-content/uploads/2026/03/Roof_repair_in_progress_e9b02712-B77g39AH.png  301
+/home/roof_repair_in_progress_e9b02712-b77g39ah/  /wp-content/uploads/2026/03/Roof_repair_in_progress_e9b02712-B77g39AH.png  301
+/home/storm_damaged_roof_assessment_56e98263-ccsze9jj  /wp-content/uploads/2026/03/Storm_damaged_roof_assessment_56e98263-CCSZe9JJ.png  301
+/home/storm_damaged_roof_assessment_56e98263-ccsze9jj/  /wp-content/uploads/2026/03/Storm_damaged_roof_assessment_56e98263-CCSZe9JJ.png  301
+/home/gutter_installation_work_b001c1b0-yxarrtoo  /wp-content/uploads/2026/03/Gutter_installation_work_b001c1b0-yXaRrtoo.png  301
+/home/gutter_installation_work_b001c1b0-yxarrtoo/  /wp-content/uploads/2026/03/Gutter_installation_work_b001c1b0-yXaRrtoo.png  301
+/home/pattern_4_1760819902693-d2fjie4a  /wp-content/uploads/2026/03/Pattern_4_1760819902693-D2fJIe4A-scaled.png  301
+/home/pattern_4_1760819902693-d2fjie4a/  /wp-content/uploads/2026/03/Pattern_4_1760819902693-D2fJIe4A-scaled.png  301
+/about/profile-pic_2_1760911175225-bwjbgxcy  /wp-content/uploads/2026/03/Profile-Pic_2_1760911175225-BWjbGxcy.png  301
+/about/profile-pic_2_1760911175225-bwjbgxcy/  /wp-content/uploads/2026/03/Profile-Pic_2_1760911175225-BWjbGxcy.png  301
+/roofing-services-texas/roofing-services-dallas  /wp-content/uploads/2026/03/roofing-services-dallas.jpg  301
+/roofing-services-texas/roofing-services-dallas/  /wp-content/uploads/2026/03/roofing-services-dallas.jpg  301
+/roofing-services-texas/preview-of-the-roof-installed-in-dallas  /wp-content/uploads/2026/03/preview-of-the-roof-installed-in-dallas.jpg  301
+/roofing-services-texas/preview-of-the-roof-installed-in-dallas/  /wp-content/uploads/2026/03/preview-of-the-roof-installed-in-dallas.jpg  301
