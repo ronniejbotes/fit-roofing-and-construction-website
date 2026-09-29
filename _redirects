@@ -89,6 +89,19 @@
 /index.php            /                   301
 /blog/page/1          /blog/              301
 /blog/page/1/         /blog/              301
+# Paginated copies of single pages: WordPress answered them 200 with a
+# canonical naming the page itself (observed 17 September 2026). Added 29
+# September 2026. No pattern, because /blog/page/2/ is a real page.
+/page/2                     /                    301
+/page/2/                    /                    301
+/about/page/2               /about/              301
+/about/page/2/              /about/              301
+/dallas/page/2              /dallas/             301
+/dallas/page/2/             /dallas/             301
+/portfolio/page/2           /portfolio/          301
+/portfolio/page/2/          /portfolio/          301
+/roofing-locations/page/2   /roofing-locations/  301
+/roofing-locations/page/2/  /roofing-locations/  301
 /favicon.ico          /wp-content/uploads/2026/03/cropped-Gold-house-roof-and-windows-icon-1-32x32.png  302
 
 # ---- Old attachment pages ------------------------------------------------------

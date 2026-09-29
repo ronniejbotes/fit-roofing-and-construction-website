@@ -121,6 +121,17 @@ RewriteRule ^wp-sitemap\.xml$  /sitemap_index.xml  [R=301,L]
 RewriteRule ^index\.php$       /                   [R=301,L]
 RewriteRule ^blog/page/1/?$    /blog/              [R=301,L]
 
+# Paginated copies of single pages. WordPress answered these with a 200 and a
+# canonical naming the page itself (observed 17 September 2026), so each goes
+# to that page. Only the five recorded are carried, with no pattern: the
+# blog's real second page, /blog/page/2/, is a page in this repo and must keep
+# answering 200.
+RewriteRule ^page/2/?$                    /                    [R=301,L]
+RewriteRule ^about/page/2/?$              /about/              [R=301,L]
+RewriteRule ^dallas/page/2/?$             /dallas/             [R=301,L]
+RewriteRule ^portfolio/page/2/?$          /portfolio/          [R=301,L]
+RewriteRule ^roofing-locations/page/2/?$  /roofing-locations/  [R=301,L]
+
 # The old site answers this one 302, not 301. Kept as it is.
 RewriteRule ^favicon\.ico$  /wp-content/uploads/2026/03/cropped-Gold-house-roof-and-windows-icon-1-32x32.png  [R=302,L]
 
