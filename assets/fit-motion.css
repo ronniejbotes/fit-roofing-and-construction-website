@@ -542,3 +542,56 @@ html.fit-motion .elementor-widget-counter[data-fit-reveal]:not(.fit-in) { transf
   }
   .fit-progress { display: none !important; }
 }
+
+/* ==========================================================================
+   9. Guides and area lists: plain link blocks that sit just before the
+   closing call to action on service, city and area pages. Static, no motion.
+   ========================================================================== */
+.fit-guides {
+  box-sizing: border-box;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 56px 20px;
+}
+.fit-guides h2 {
+  margin: 0 0 20px;
+  font-family: var(--e-global-typography-primary-font-family, "AR One Sans"), sans-serif;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.2;
+  color: var(--fit-ink);
+}
+.fit-guides ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+.fit-guides li {
+  margin: 0;
+}
+.fit-guides a {
+  font-family: var(--e-global-typography-text-font-family, "Roboto"), sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--fit-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+.fit-guides a:hover,
+.fit-guides a:focus-visible {
+  color: var(--fit-ink);
+}
+@media (max-width: 767px) {
+  .fit-guides {
+    padding: 40px 16px;
+  }
+  .fit-guides h2 {
+    font-size: 24px;
+  }
+  .fit-guides a {
+    font-size: 16px;
+  }
+}
