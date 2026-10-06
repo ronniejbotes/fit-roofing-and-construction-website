@@ -595,3 +595,26 @@ html.fit-motion .elementor-widget-counter[data-fit-reveal]:not(.fit-in) { transf
     font-size: 16px;
   }
 }
+
+/* ==========================================================================
+   10. Links placed on words a service or city page already carries. They
+   keep the colour of the text around them, on light and dark sections
+   alike, and an underline marks them as links. Inside an Elementor icon
+   list they stay in line with the words around them, because Elementor
+   makes every link in a list item a flex box. Static, no motion.
+   ========================================================================== */
+a.fit-link,
+a.fit-link:hover,
+a.fit-link:active,
+a.fit-link:focus-visible {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+a.fit-link:hover,
+a.fit-link:focus-visible {
+  text-decoration-thickness: 2px;
+}
+.elementor-widget .elementor-icon-list-item a.fit-link {
+  display: inline;
+}

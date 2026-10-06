@@ -1,6 +1,7 @@
 # Every URL that answers 200 on fitroofingco.com, as discovered by
 # tools/discover.mjs. This is the capture manifest for tools/mirror-browser.mjs.
 # Generated 2026-09-15 — 48 routes.
+# Blog posts published since the capture are added by hand, in the same sorted order.
 /
 /about/
 /arlington/
@@ -27,6 +28,7 @@
 /plano/
 /portfolio/
 /post-sitemap.xml
+/replace-gutters-with-new-roof/
 /roof-inspection-texas/
 /roof-installation-texas/
 /roof-lifespan-texas-weather/
