@@ -43,6 +43,7 @@
 /roofing-services-texas/
 /sitemap_index.xml
 /skylight-installation-texas/
+/skylight-leak-after-storm/
 /storm-repair-texas/
 /tag/maintenance/
 /tag/planning/
