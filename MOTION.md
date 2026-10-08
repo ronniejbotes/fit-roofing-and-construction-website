@@ -106,7 +106,7 @@ and schema.
 | File | What it does |
 |---|---|
 | `assets/fit-portfolio.css` / `.js` | The five template components in plain CSS + a classic script: FadeIn (`[data-fp-fade]`), Magnet (`[data-fp-magnet]`), scroll-driven Marquee, character-by-character AnimatedText, and the sticky CardStack. One passive scroll listener, one frame. |
-| `assets/portfolio/` | WebP derivatives (900 w and 1600 w) of the **six real drone photographs** plus `portfolio.jpeg`, eight stills from the two drone clips, and a 12-second centre-cropped flyover (`finished-flyover.mp4`, 719 KB). 4.2 MB in total. |
+| `assets/portfolio/` | WebP derivatives (900 w and 1600 w) of the **six real drone photographs** plus `portfolio.jpeg`, detail crops of three of them, and four stills from the first drone clip. 3.3 MB in total. (Until 8 October 2026 there were also four stills from the second clip and a 12-second flyover cut from it. See *Taken off the page* below.) |
 | `assets/fonts/kanit-*.woff2` | Kanit 300/500/700/900, Latin, self-hosted (19 KB each). The 900 is preloaded on this page. |
 | `tools/motion-qa-portfolio.mjs` | `npm run motion:qa:portfolio` — desktop, mobile and reduced-motion probe with screenshots. |
 
@@ -117,13 +117,24 @@ is the live site's and is reproduced, not corrected — see below). Each of the 
 services carries the opening sentence of its own page and links to it. Each of the three
 project cards is **one house**, titled by what its photographs show — *Dried in, ready for
 shingles* (the two-storey job: the full frame and two detail crops of the same photograph),
-*Tile roof, new courses going down*, *Finished roof, from above* (the flyover house: two
-stills and the clip) — with no client names, addresses, dates or figures, and every alt text
+*Tile roof, new courses going down*, *Tear-off and new underlayment* (a large brick home
+mid-replacement: the full aerial frame, the same roof from the driveway side, and a detail
+crop) — with no client names, addresses, dates or figures, and every alt text
 describes the actual photograph. An agent review caught the first draft of this: three
 cards that were collages of different houses under "Projects 01–03", and titles claiming
 "clay", "re-laid" and "inspected" that no photograph could back. Fixed before it shipped. The template's "Live Project" button
 became a link to the matching service page. `roofing-installation-in-dallas-texas.jpg`
 was **not** used: it is a stock photograph of a European tile roof, not this company's work.
+
+**Taken off the page, 8 October 2026.** The owner did not want the house with the white
+patio cover on the site. That house was the whole of the second drone clip, so card 03
+(*Finished roof, from above*: two stills and the flyover), the four `still-b-*` frames in
+the marquee and the About corner decoration all came off, and the files were deleted. They
+are in git history. The same house had also been the "Our Work" tiles on the four city pages and
+`/roofing-locations/`, and those now use the company's other drone photographs. The card
+stack keeps its play-on-screen and **Pause** code in `fit-portfolio.js`; with no
+`video[data-fp-video]` on the page it does nothing, and a clip can come back without
+touching the script.
 
 **Departures from the template, on purpose.** Warm off-white text (`#E9E2D8`) and a
 bronze gradient headline instead of the template's cool blue-grey; a bronze gradient pill
@@ -173,8 +184,8 @@ Also fixed: the founder's quote now ships a real, visually-hidden copy for scree
 readers (an `aria-label` on a `<p>` whose only child is `aria-hidden` is skipped by NVDA and
 JAWS — the quote was silently unreadable); the reveal transition moved off the hidden state
 onto `.is-in`, so adding the motion class no longer fades the visible hero out and back on
-load; the in-page nav moves focus to the section it scrolls to; the looping flyover has a
-keyboard-reachable **Pause** control and, once pressed, the observer stops overriding it
+load; the in-page nav moves focus to the section it scrolls to; the looping flyover (since
+removed, see above) had a keyboard-reachable **Pause** control and, once pressed, the observer stops overriding it
 (WCAG 2.2.2 — the clip runs longer than five seconds); the primary pill's gradient lost the
 light copper stop that sat under the white label and dropped it below 4.5:1; the hero nav
 and CTA wrap instead of clipping at 320px or with a large user font; Tab onto a not-yet-
@@ -373,8 +384,8 @@ whose confirmed findings are all fixed):
   follows the pointer and springs back; the marquee rows move in opposite directions with
   scroll and never run out at 1024, 1920 or 2560 wide; the paragraph splits into 309
   characters and is 100% lit at the end of its range; 8 services, all 8 links answer 200;
-  three cards settle into a 0.949 / 0.977 / 1.0 stack; the flyover plays while on screen and
-  is landscape; mobile has no horizontal overflow; reduced motion shows everything, splits
+  three cards settle into a 0.949 / 0.977 / 1.0 stack (the flyover play check runs only when
+  a card carries a clip, and since 8 October 2026 none does); mobile has no horizontal overflow; reduced motion shows everything, splits
   nothing, moves nothing. On a short laptop viewport (1024×576) the cards shrink so each
   stays shorter than its slot and fits under the header. 0 errors, 0 failed requests.
 - 0 console errors and 0 failed same-origin requests on every run. The only aborted
@@ -428,5 +439,5 @@ live, `npm run motion:remove` first, then `npm run motion` again.
    on the portfolio page. It is the client's copy and was reproduced, not corrected. One
    word to change on their say-so ("belief"), in both places.
 6. **The portfolio's second drone clip is unplayable in Chrome on the live site** (HEVC
-   `.mov`). Worth replacing at source with an H.264 `.mp4`; the cropped 12-second version
-   here can be handed over as-is.
+   `.mov`). Moot here since 8 October 2026: it is the house the owner asked to take off
+   the site. The cropped 12-second H.264 version is in git history if it is ever wanted.

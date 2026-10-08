@@ -180,9 +180,12 @@ const JUMP = 'window.__jump = (y) => window.scrollTo({ top: y, left: 0, behavior
   const tallest = Math.max(...samples.flat().map((c) => c.h))
   note(`  tallest card ${tallest}px in a ${vh}px viewport`)
   if (tallest > vh - 100) bad(`card too tall for the viewport (${tallest}px)`)
+  // The cards have carried photographs only since 8 October 2026, when the
+  // flyover clip went with the house it showed. A clip that comes back must
+  // play while on screen and be landscape.
   const vid = await page.evaluate(() => { const v = document.querySelector('video[data-fp-video]'); return v ? { paused: v.paused, t: +v.currentTime.toFixed(1), src: v.currentSrc.split('/').pop(), w: v.videoWidth, h: v.videoHeight } : null })
   note('  card video: ' + JSON.stringify(vid))
-  if (!vid || vid.paused) bad('card video not playing while on screen')
+  if (vid && vid.paused) bad('card video not playing while on screen')
   if (vid && vid.h > vid.w) bad(`card video is portrait (${vid.w}x${vid.h}) — rotation metadata mishandled in the encode`)
 
   await page.evaluate(() => window.__jump(document.body.scrollHeight))

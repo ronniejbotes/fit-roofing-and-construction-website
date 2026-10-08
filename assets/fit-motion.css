@@ -597,24 +597,59 @@ html.fit-motion .elementor-widget-counter[data-fit-reveal]:not(.fit-in) { transf
 }
 
 /* ==========================================================================
-   10. Links placed on words a service or city page already carries. They
-   keep the colour of the text around them, on light and dark sections
-   alike, and an underline marks them as links. Inside an Elementor icon
-   list they stay in line with the words around them, because Elementor
-   makes every link in a list item a flex box. Static, no motion.
+   10. Links placed on words a service or city page already carries. At
+   rest they read as the text around them, with no underline (the owner's
+   call, 8 October 2026); on hover and on keyboard focus the words turn
+   bronze, which is what marks them as links. Inside an Elementor icon list
+   they stay in line with the words around them, because Elementor makes
+   every link in a list item a flex box. A colour fade, no movement.
    ========================================================================== */
 a.fit-link,
-a.fit-link:hover,
-a.fit-link:active,
-a.fit-link:focus-visible {
+a.fit-link:active {
   color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration: none;
+  transition: color .2s ease;
 }
 a.fit-link:hover,
 a.fit-link:focus-visible {
-  text-decoration-thickness: 2px;
+  color: #D9A25F;
+  text-decoration: none;
+}
+a.fit-link:focus-visible {
+  outline: 2px solid #D9A25F;
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 .elementor-widget .elementor-icon-list-item a.fit-link {
   display: inline;
+}
+
+/* ==========================================================================
+   11. Blog cards: the loop-item template (id 293) on /blog/, its page 2,
+   the tag archives and /uncategorized/. The featured images come in five
+   shapes (square, 3:2, 16:9 and between), which made every card a
+   different height. Each image is cropped to the same 16:10 frame, every
+   card in a row is as tall as the tallest, and the date sits at the foot.
+   Static, no motion. The one place this file keys to Elementor element
+   ids: the template's own inline CSS (<style id="loop-293">) does too, so
+   re-saving the template in Elementor would break both together.
+   ========================================================================== */
+.elementor-loop-container > .e-loop-item.elementor-293 {
+  display: flex;
+  flex-direction: column;
+}
+.e-loop-item.elementor-293 > .elementor-element-396bb60,
+.e-loop-item.elementor-293 .elementor-element-396bb60 > .e-con-inner,
+.e-loop-item.elementor-293 .elementor-element-1b1966a {
+  flex: 1 1 auto;
+}
+.e-loop-item.elementor-293 .elementor-element-9d0ed49 img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+.e-loop-item.elementor-293 .elementor-element-5fbcb95 {
+  margin-top: auto;
 }
