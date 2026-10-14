@@ -6,3 +6,11 @@
     border: 1px solid rgba(255,255,255,0.3);
     border-radius: 2px;
 }/* End custom CSS */
+
+/* Dallas hero heading on phones, 14 October 2026: "Replacement" was wider than
+   the 74%-wide heading box and ran to the screen edge. Same fix as the Plano
+   hero (8 October): a 90% box and 42px type. */
+@media(max-width:767px){
+.elementor-538 .elementor-element.elementor-element-7f69e4f{--container-widget-width:90%;width:90%;max-width:90%;}
+.elementor-538 .elementor-element.elementor-element-7f69e4f .elementor-heading-title{font-size:42px;line-height:1.1;}
+}

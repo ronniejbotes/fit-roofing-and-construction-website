@@ -14,3 +14,7 @@
     border: 1px solid rgba(255,255,255,0.3);
     border-radius: 2px;
 }/* End custom CSS */
+
+/* Services page hero heading on phones, 14 October 2026: at 65px its longest word
+   ran past the screen edge at 390px and the page scrolled sideways. */
+@media(max-width:767px){.elementor-17 .elementor-element.elementor-element-7f69e4f .elementor-heading-title{font-size:48px;}}
