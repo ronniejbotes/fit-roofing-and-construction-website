@@ -8,3 +8,4 @@
 /* On phones the chat launcher sits over the bottom-right corner; leave room
    under the line so it can be read at the end of the page. */
 @media(max-width:767px){.elementor-location-footer .fit-copyright{padding-bottom:96px;}}
+.fit-copyright a{color:inherit;text-decoration:underline;text-underline-offset:2px;}.fit-copyright a:hover{color:#fff;}
