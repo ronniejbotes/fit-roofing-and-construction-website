@@ -29,6 +29,7 @@
 /plano/
 /portfolio/
 /post-sitemap.xml
+/privacy-policy/
 /replace-gutters-with-new-roof/
 /roof-inspection-texas/
 /roof-installation-texas/
