@@ -1,0 +1,96 @@
+/*
+ * Phone fixes, 15 October 2026.
+ *
+ * The owner's ask: "build everything for mobile first, as everyone uses their
+ * phone these days". Every page was looked at on a 390x844 and a 360x800
+ * screen; these are the faults that showed, each one measured before and
+ * after. Every rule sits behind max-width: 767px, so tablets and desktops
+ * render exactly as before. Linked on every page next to fit-motion.css by
+ * tools/inject-motion.mjs, so `npm run motion:remove` takes it out with the
+ * rest of the layer.
+ */
+@media (max-width: 767px) {
+
+  /* The chat's "Need Roofing Help?" note sat fixed over the bottom right of
+     every screen (169x61, above the chat button), on top of buttons, card
+     text and the copyright line, with a 14px close cross. The chat button
+     itself stays where it is. */
+  #welcomeMessages { display: none !important; }
+
+  /* Intro paragraphs set at 25px on a 24px line (Elementor's per-widget
+     typography, written for desktop): on a phone they ran 9 to 13 lines
+     with the lines almost touching (service and city heroes, About's mission
+     and vision, the "Comprehensive roofing solutions" and "A simple,
+     transparent process" lines, the closing "Schedule your free inspection").
+     20px on a 1.45 line. */
+  .elementor-element-055947b, .elementor-element-085d654, .elementor-element-08f548a,
+  .elementor-element-13ecfb0, .elementor-element-24faa2b, .elementor-element-2a8f097,
+  .elementor-element-2b2578e, .elementor-element-33cf717, .elementor-element-34d8a5f,
+  .elementor-element-431ab08, .elementor-element-48a41e0, .elementor-element-6680d1a,
+  .elementor-element-688aafc, .elementor-element-6e16d32, .elementor-element-7c534c8,
+  .elementor-element-7cdb279, .elementor-element-9868567, .elementor-element-ccbb09d,
+  .elementor-element-e4822e5, .elementor-element-f03bf90, .elementor-element-fbd4da7 {
+    font-size: 20px !important;
+    line-height: 1.45 !important;
+    /* Several of them were also held to 65% of the screen (254px of 390). */
+    --container-widget-width: 100% !important;
+    width: auto !important;
+    max-width: 100% !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* FAQ answers on the nine service pages were 13px. */
+  .elementor-element-74c50af, .elementor-element-4519de2, .elementor-element-78ae937,
+  .elementor-element-b240882, .elementor-element-3d948a3 {
+    font-size: 16px !important;
+    line-height: 1.55 !important;
+  }
+
+  /* The menu button was 33px square and drawn in dark grey (#33373D) on the
+     near-black header, hard to see and to hit. 44px, in the logo's light
+     tone. */
+  .elementor-location-header .elementor-menu-toggle {
+    width: 44px !important;
+    height: 44px !important;
+    padding: 9px !important;
+    /* the extra 11px overlaps the header's own padding, so the bar keeps
+       its 103px height */
+    margin-top: -5.5px !important;
+    margin-bottom: -5.5px !important;
+    color: #E9E1D6 !important;
+    fill: #E9E1D6 !important;
+  }
+  .elementor-location-header .elementor-menu-toggle svg {
+    width: 26px !important;
+    height: 26px !important;
+    fill: #E9E1D6 !important;
+  }
+
+  /* Buttons were 39px tall; 44px is the smallest comfortable tap. */
+  .elementor-button {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Footer link lists (Services, Quick Links): 24px rows packed together.
+     40px rows, same order and wording. */
+  .elementor-location-footer .elementor-icon-list-item > a {
+    display: flex;
+    min-height: 40px;
+    align-items: center;
+  }
+
+  /* Blog posts: the title and the article each had 12% padding inside a
+     padded column, so the text ran 281px wide on a 390px phone (about 35
+     characters a line). 20px from the screen edge instead, like the
+     picture above them. */
+  .elementor-location-single .elementor-widget-theme-post-content,
+  .elementor-location-single .elementor-widget-theme-post-title,
+  .elementor-location-single .elementor-element-96be4d4 {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+}
