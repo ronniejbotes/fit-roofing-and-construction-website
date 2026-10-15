@@ -93,4 +93,20 @@
     padding-left: 10px !important;
     padding-right: 10px !important;
   }
+
+  /* Form fields were 15px: iPhone Safari zooms the page into any field under
+     16px when it is tapped. */
+  .elementor-field-textual {
+    font-size: 16px !important;
+  }
+
+  /* The homepage "Book Now" band (and the same band on /fort-worth/ and
+     /home-2/) painted a 1920x1080 photograph, 711 KB, behind the form on a
+     390px phone. The same picture at 1024x576 (117 KB) is plenty for a
+     phone-sized band. */
+  .elementor-12 .elementor-element.elementor-element-eb25e37:not(.elementor-motion-effects-element-type-background),
+  .elementor-545 .elementor-element.elementor-element-16ede0f:not(.elementor-motion-effects-element-type-background),
+  .elementor-767 .elementor-element.elementor-element-cf01e9c:not(.elementor-motion-effects-element-type-background) {
+    background-image: url("/wp-content/uploads/2026/03/portfolio-1024x576.webp") !important;
+  }
 }
