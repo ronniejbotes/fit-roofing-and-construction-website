@@ -109,4 +109,25 @@
   .elementor-767 .elementor-element.elementor-element-cf01e9c:not(.elementor-motion-effects-element-type-background) {
     background-image: url("/wp-content/uploads/2026/03/portfolio-1024x576.webp") !important;
   }
+
+  /* Service page heroes (16 October 2026): roof replacement painted a
+     1920x1080 photograph (394 KB), roof repair a 1920x1080 one (322 KB) and
+     storm repair a 1440x842 one (236 KB). Phones get 1024px WebP copies of
+     the same pictures (110, 88 and 112 KB).
+     The motion layer (fit-motion.js, initHero) reads this section's computed
+     background once at load, copies it onto div.fit-hero-bg__img, then
+     switches the section's own background off with a one-class
+     `background-image: none !important` rule. :where() keeps these rules at
+     zero specificity, so they still beat Elementor's (not !important) but
+     lose to that switch-off rule: the layer gets the small copy and the
+     section does not paint it a second time underneath. */
+  :where(.elementor-155 .elementor-element.elementor-element-7f96697:not(.elementor-motion-effects-element-type-background)) {
+    background-image: url("/wp-content/uploads/2026/03/roof-replacement-texas-photo-by-paragon-exterior-on-unsplash-1024x576.webp") !important;
+  }
+  :where(.elementor-192 .elementor-element.elementor-element-7f96697:not(.elementor-motion-effects-element-type-background)) {
+    background-image: url("/wp-content/uploads/2026/03/roof-repair-texas-1024x576.webp") !important;
+  }
+  :where(.elementor-193 .elementor-element.elementor-element-7f96697:not(.elementor-motion-effects-element-type-background)) {
+    background-image: url("/wp-content/uploads/2026/03/storm-repair-texas-1024x599.webp") !important;
+  }
 }
