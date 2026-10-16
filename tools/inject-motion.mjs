@@ -54,7 +54,9 @@ const BODY_HOME = `<script src="/assets/fit-home.js" defer ${MARK}></script>`
 // its headline is set in.
 const HEAD_PORTFOLIO = [
   `<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/kanit-900-latin.woff2" crossorigin ${MARK}>`,
-  `<link rel="stylesheet" href="/assets/fit-portfolio.css" ${MARK}>`,
+  // ?v= because the host caches stylesheets for 7 days: bump it when the
+  // file changes.
+  `<link rel="stylesheet" href="/assets/fit-portfolio.css?v=20261016" ${MARK}>`,
 ]
 const BODY_PORTFOLIO = `<script src="/assets/fit-portfolio.js" defer ${MARK}></script>`
 

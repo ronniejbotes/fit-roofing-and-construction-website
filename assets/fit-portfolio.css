@@ -229,6 +229,10 @@ html.fp-motion [data-fp-fade].is-in {
 }
 @media (min-width: 640px) { .fp-hero__lede { max-width: 240px; } }
 @media (min-width: 768px) { .fp-hero__lede { max-width: 300px; } }
+/* Phones (16 October 2026): 1.4vw put the line at its 12px floor on every
+   phone, too small to read. 15px, and 240px wide, so it keeps the same
+   three-line shape it had at 12px in 190px. Desktop is untouched. */
+@media (max-width: 767px) { .fp-hero__lede { font-size: 15px; max-width: 240px; } }
 
 /* The portrait: the owner, cut out, standing in front of the headline.
    Three nested layers so no two transforms fight — the outer box only
@@ -452,6 +456,9 @@ html.fp-motion [data-fp-fade].is-in {
   line-height: 1.6;
   opacity: .6;
 }
+/* Phones (16 October 2026): the descriptions sat at their 13.6px floor.
+   16px, the same as the FAQ answers on the service pages. */
+@media (max-width: 767px) { .fp-service__desc { font-size: 16px; } }
 
 /* ==========================================================================
    5. Projects — three sticky cards that stack and settle back in scale.
