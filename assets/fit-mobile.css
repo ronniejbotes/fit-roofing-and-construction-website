@@ -218,4 +218,17 @@
     .elementor-197 .elementor-element.elementor-element-d8c92af:not(.elementor-motion-effects-element-type-background)) {
     background-image: url("/wp-content/uploads/2026/03/Confident-roofer-with-pneumatic-nail-gun-680x845.webp") !important;
   }
+
+  /* Breadcrumb links (18 October 2026) on the blog posts and the blog and tag
+     pages ("Home", "Roofing Blog") were 15px tall, a small tap. Padding on
+     the inline link makes the tap area 44px tall and 12px wider; on an
+     inline box vertical padding does not move the line, and the negative
+     side margins give back the side padding, so nothing on screen moves.
+     Most of it goes above the link, where the space is empty: on a post the
+     breadcrumb's second line (the post title) starts 3px below the links,
+     and text painted after a link takes the tap where the two overlap. */
+  .elementor-widget-breadcrumbs a {
+    padding: 26px 6px 3px;
+    margin: 0 -6px;
+  }
 }

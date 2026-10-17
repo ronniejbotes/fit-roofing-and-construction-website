@@ -40,7 +40,7 @@ const HEAD_CSS = `<link rel="stylesheet" href="/assets/fit-motion.css" ${MARK}>`
   // Phone fixes (15 October 2026), every rule behind max-width: 767px. The
   // ?v= is there because the host caches stylesheets for 7 days: bump it when
   // the file changes.
-  + `\n<link rel="stylesheet" href="/assets/fit-mobile.css?v=20261018c" ${MARK}>`
+  + `\n<link rel="stylesheet" href="/assets/fit-mobile.css?v=20261018d" ${MARK}>`
 // The gate is desktop-only (GATE_MIN_WIDTH in fit-home.js), so the poster is
 // preloaded only where it will be shown — a phone never pays for it.
 const HEAD_HOME = [
