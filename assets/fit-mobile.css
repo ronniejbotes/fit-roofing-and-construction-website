@@ -130,4 +130,60 @@
   :where(.elementor-193 .elementor-element.elementor-element-7f96697:not(.elementor-motion-effects-element-type-background)) {
     background-image: url("/wp-content/uploads/2026/03/storm-repair-texas-1024x599.webp") !important;
   }
+
+  /* Lattice pattern bands (18 October 2026). The dark bands on 27 pages tile
+     a 2560x2560 PNG (196 KB) and the homepage's white counters band another
+     (111 KB), each drawn at 20% of the band's width: 78px a tile on a 390px
+     phone. Phones get 1024x1024 lossless WebP copies of the same artwork
+     (43 and 16 KB); the tile size, colour and position stay as they were.
+     "Pattern" stays in the file names because fit-motion.js finds these
+     bands by that word in the computed background (seams and lattice).
+     :where() and !important, as for the service page heroes above. */
+  :where(
+    .elementor-12 .elementor-element.elementor-element-98362bf:not(.elementor-motion-effects-element-type-background),
+    .elementor-12 .elementor-element.elementor-element-d295875:not(.elementor-motion-effects-element-type-background),
+    .elementor-12 .elementor-element.elementor-element-bdf28a8:not(.elementor-motion-effects-element-type-background),
+    .elementor-12 .elementor-element.elementor-element-04efcb2:not(.elementor-motion-effects-element-type-background),
+    .elementor-767 .elementor-element.elementor-element-98362bf:not(.elementor-motion-effects-element-type-background),
+    .elementor-767 .elementor-element.elementor-element-72d9e19:not(.elementor-motion-effects-element-type-background),
+    .elementor-767 .elementor-element.elementor-element-ae519ca:not(.elementor-motion-effects-element-type-background),
+    .elementor-767 .elementor-element.elementor-element-04efcb2:not(.elementor-motion-effects-element-type-background),
+    .elementor-15 .elementor-element.elementor-element-b310728:not(.elementor-motion-effects-element-type-background),
+    .elementor-15 .elementor-element.elementor-element-543d45b:not(.elementor-motion-effects-element-type-background),
+    .elementor-15 .elementor-element.elementor-element-289f783:not(.elementor-motion-effects-element-type-background),
+    .elementor-15 .elementor-element.elementor-element-8559d1f:not(.elementor-motion-effects-element-type-background),
+    .elementor-15 .elementor-element.elementor-element-f62f9d9:not(.elementor-motion-effects-element-type-background),
+    .elementor-17 .elementor-element.elementor-element-b1b6eed:not(.elementor-motion-effects-element-type-background),
+    .elementor-17 .elementor-element.elementor-element-8421461:not(.elementor-motion-effects-element-type-background),
+    .elementor-17 .elementor-element.elementor-element-08d3f0d:not(.elementor-motion-effects-element-type-background),
+    .elementor-155 .elementor-element.elementor-element-b1b6eed:not(.elementor-motion-effects-element-type-background),
+    .elementor-155 .elementor-element.elementor-element-08d3f0d:not(.elementor-motion-effects-element-type-background),
+    .elementor-191 .elementor-element.elementor-element-b1b6eed:not(.elementor-motion-effects-element-type-background),
+    .elementor-191 .elementor-element.elementor-element-08d3f0d:not(.elementor-motion-effects-element-type-background),
+    .elementor-192 .elementor-element.elementor-element-b1b6eed:not(.elementor-motion-effects-element-type-background),
+    .elementor-192 .elementor-element.elementor-element-08d3f0d:not(.elementor-motion-effects-element-type-background),
+    .elementor-193 .elementor-element.elementor-element-b1b6eed:not(.elementor-motion-effects-element-type-background),
+    .elementor-193 .elementor-element.elementor-element-08d3f0d:not(.elementor-motion-effects-element-type-background),
+    .elementor-194 .elementor-element.elementor-element-b1b6eed:not(.elementor-motion-effects-element-type-background),
+    .elementor-194 .elementor-element.elementor-element-08d3f0d:not(.elementor-motion-effects-element-type-background),
+    .elementor-195 .elementor-element.elementor-element-b1b6eed:not(.elementor-motion-effects-element-type-background),
+    .elementor-195 .elementor-element.elementor-element-08d3f0d:not(.elementor-motion-effects-element-type-background),
+    .elementor-196 .elementor-element.elementor-element-b1b6eed:not(.elementor-motion-effects-element-type-background),
+    .elementor-196 .elementor-element.elementor-element-08d3f0d:not(.elementor-motion-effects-element-type-background),
+    .elementor-197 .elementor-element.elementor-element-b1b6eed:not(.elementor-motion-effects-element-type-background),
+    .elementor-197 .elementor-element.elementor-element-08d3f0d:not(.elementor-motion-effects-element-type-background),
+    .elementor-504 .elementor-element.elementor-element-b6bc6aa:not(.elementor-motion-effects-element-type-background),
+    .elementor-538 .elementor-element.elementor-element-b6bc6aa:not(.elementor-motion-effects-element-type-background),
+    .elementor-540 .elementor-element.elementor-element-b6bc6aa:not(.elementor-motion-effects-element-type-background),
+    .elementor-541 .elementor-element.elementor-element-b6bc6aa:not(.elementor-motion-effects-element-type-background),
+    .elementor-545 .elementor-element.elementor-element-b6bc6aa:not(.elementor-motion-effects-element-type-background),
+    .elementor-19 .elementor-element.elementor-element-691d38a:not(.elementor-motion-effects-element-type-background),
+    .elementor-292 .elementor-element.elementor-element-5863e79:not(.elementor-motion-effects-element-type-background)) {
+    background-image: url("/wp-content/uploads/2026/03/Pattern_1760821232732-BxRKkN_8-1024x1024.webp") !important;
+  }
+  :where(
+    .elementor-12 .elementor-element.elementor-element-2eb0266:not(.elementor-motion-effects-element-type-background),
+    .elementor-767 .elementor-element.elementor-element-2eb0266:not(.elementor-motion-effects-element-type-background)) {
+    background-image: url("/wp-content/uploads/2026/03/Pattern_4_1760819902693-D2fJIe4A-1024x1024.webp") !important;
+  }
 }
