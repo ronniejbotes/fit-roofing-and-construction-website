@@ -190,7 +190,7 @@
   /* Homepage hero (18 October 2026). On a phone the hero box is about 390px
      wide and 2,000px tall, and the 1408x768 photograph (256 KB) is drawn with
      `cover`, so only the middle tenth of its width shows (a fifth at 767px).
-     Phones get the middle 608x768 of the same photograph (117 KB), cut
+     Phones get the middle 608x768 of the same photograph (115 KB), cut
      around the same centre at full resolution: the box would have to be
      wider than 0.79 of its height before any edge of the cut could show, so
      the picture on screen is the same. index.html preloads this copy for
@@ -199,5 +199,23 @@
      page heroes above. */
   :where(.elementor-12 .elementor-element.elementor-element-982bd2a:not(.elementor-motion-effects-element-type-background)) {
     background-image: url("/wp-content/uploads/2026/03/Premium_residential_roof_hero_image_5360bc36-DRkZuqw1-608x768.webp") !important;
+  }
+
+  /* Card photo (18 October 2026). The roofer with the nail gun (services
+     hub, the eight service pages, attic insulation and solar panel removal:
+     eleven pages) is an 825x1024 WebP, 207 KB, drawn with `contain`
+     in a box 300px tall: 242x300 on a phone. Phones get a 680x845 copy of
+     the same picture (135 KB). */
+  :where(
+    .elementor-17 .elementor-element.elementor-element-d8c92af:not(.elementor-motion-effects-element-type-background),
+    .elementor-155 .elementor-element.elementor-element-d8c92af:not(.elementor-motion-effects-element-type-background),
+    .elementor-191 .elementor-element.elementor-element-d8c92af:not(.elementor-motion-effects-element-type-background),
+    .elementor-192 .elementor-element.elementor-element-d8c92af:not(.elementor-motion-effects-element-type-background),
+    .elementor-193 .elementor-element.elementor-element-d8c92af:not(.elementor-motion-effects-element-type-background),
+    .elementor-194 .elementor-element.elementor-element-d8c92af:not(.elementor-motion-effects-element-type-background),
+    .elementor-195 .elementor-element.elementor-element-d8c92af:not(.elementor-motion-effects-element-type-background),
+    .elementor-196 .elementor-element.elementor-element-d8c92af:not(.elementor-motion-effects-element-type-background),
+    .elementor-197 .elementor-element.elementor-element-d8c92af:not(.elementor-motion-effects-element-type-background)) {
+    background-image: url("/wp-content/uploads/2026/03/Confident-roofer-with-pneumatic-nail-gun-680x845.webp") !important;
   }
 }
