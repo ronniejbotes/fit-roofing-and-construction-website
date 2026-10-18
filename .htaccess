@@ -17,6 +17,44 @@ ErrorDocument 404 /404.html
 # Directory listings are not part of the site.
 Options -Indexes
 
+# ---- Browser caching (18 October 2026) ---------------------------------------
+# Until now the host sent every static file with a flat 7-day lifetime and the
+# HTML with none. Now:
+#   - CSS, JS, fonts and images whose URL carries a version (?v=..., ?ver=...
+#     or a bare ?5.44.0, as WordPress, Elementor and our own links do) are
+#     cached for a year and marked immutable. A change to one of those files
+#     MUST bump its ?v= / ?ver= in every page that links it (all of ours do,
+#     e.g. /assets/fit-mobile.css?v=20261018e), or returning visitors keep the
+#     old copy for up to a year.
+#   - Unversioned images, fonts and video: 30 days. Upload names are unique
+#     and are never edited in place (a new crop gets a new name), but they
+#     carry no version, so a year would be a gamble.
+#   - Unversioned CSS and JS: 1 day (none of the pages link one as of today).
+#   - HTML, XML sitemaps and text files: no-cache, i.e. the browser checks
+#     with the server (ETag) every time, so a deploy shows at once.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{QUERY_STRING} (^|&)(v|ver)=[^&]+ [OR]
+    RewriteCond %{QUERY_STRING} ^[0-9][0-9.]*$
+    RewriteRule \.(css|js|woff2?|ttf|otf|eot|svg|png|jpe?g|gif|webp|avif|ico)$ - [E=FIT_VERSIONED:1]
+</IfModule>
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=86400"
+    </FilesMatch>
+    <FilesMatch "\.(woff2?|ttf|otf|eot|svg|png|jpe?g|gif|webp|avif|ico|mp4|webm)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+    <FilesMatch "\.(css|js|woff2?|ttf|otf|eot|svg|png|jpe?g|gif|webp|avif|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable" env=FIT_VERSIONED
+        Header set Cache-Control "public, max-age=31536000, immutable" env=REDIRECT_FIT_VERSIONED
+    </FilesMatch>
+    <FilesMatch "\.(html?|xml|xsl|txt)$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+    Header unset Expires
+</IfModule>
+
 # Stored enquiries carry a name, a phone number and an address. _forms/leads/
 # denies itself as well; this is the second lock, so losing one file in a
 # deploy does not put customer details on the open web.
@@ -57,13 +95,17 @@ Options -Indexes
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
-# ---- One host ----------------------------------------------------------------
+# ---- One host, one hop --------------------------------------------------------
 # Every canonical tag, every sitemap <loc>, robots.txt and llms.txt name
 # https://fitroofingco.com, but www.fitroofingco.com answered every page with
 # a 200 of its own, so each page could be fetched at two hosts. www now 301s
 # to the bare domain, path and query kept. The form handler is left out on
 # purpose: a 301 turns a POST into a GET, and the enquiry would be lost.
 # No _redirects twin: tools/serve.mjs serves a single host.
+# 18 October 2026: plain http is folded into the same rule, so
+# http://www.fitroofingco.com/ reaches https://fitroofingco.com/ in one 301
+# instead of two (http -> https://www -> bare), whichever of the two is wrong.
+RewriteCond %{HTTPS} !=on [OR]
 RewriteCond %{HTTP_HOST} ^www\.fitroofingco\.com\.?(:[0-9]+)?$ [NC]
 RewriteCond %{REQUEST_URI} !^/_forms/submit\.php$
 RewriteRule ^ https://fitroofingco.com%{REQUEST_URI} [R=301,L]
