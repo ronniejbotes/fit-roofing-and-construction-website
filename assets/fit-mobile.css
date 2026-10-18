@@ -10,7 +10,9 @@
  * it out with the rest of the layer.
  *
  * The desktop review of 18 October 2026 added three blocks at the end, for
- * tablet and desktop widths only; the phone block is unchanged.
+ * tablet and desktop widths only; the phone block is unchanged. The SEOptimer
+ * fixes the same night added the last block: classes for styles that used to
+ * be inline style="" attributes, at every width.
  */
 @media (max-width: 767px) {
 
@@ -297,3 +299,18 @@
     line-height: 1.55 !important;
   }
 }
+
+/* Inline styles moved here, 18 October 2026 (SEOptimer "inline styles").
+   Each was a style="" attribute repeated in the page HTML; the classes below
+   carry exactly the same declarations, at every width. Left inline on
+   purpose: Tag Manager's noscript iframe (Google's standard snippet), the
+   enquiry form's hidden spam-trap field (it must stay hidden even if this
+   file fails to load) and the reviews widget's template (Trustindex's). */
+/* "Founder" in "About the Founder of FIT Roofing & Construction" (18 pages). */
+.fit-accent { color: #A1805A; }
+/* The city name in the city-page H1s ("... in Fort Worth"), 5 pages. */
+.fit-accent-city { color: #d9a25f; font-style: italic; font-weight: 900; }
+/* The phone number link on /contact/ takes its paragraph's colour. */
+.elementor-icon-box-description a.fit-inherit { color: inherit; }
+/* The Google map in the footer of every page (was style="border:0;"). */
+.elementor-widget-html iframe.fit-map { border: 0; }

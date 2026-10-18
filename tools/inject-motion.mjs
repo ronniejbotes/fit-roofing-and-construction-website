@@ -40,7 +40,7 @@ const HEAD_CSS = `<link rel="stylesheet" href="/assets/fit-motion.css?v=20261018
   // Phone fixes (15 October 2026), every rule behind max-width: 767px. The
   // ?v= is there because the host caches stylesheets for 7 days: bump it when
   // the file changes.
-  + `\n<link rel="stylesheet" href="/assets/fit-mobile.css?v=20261018e" ${MARK}>`
+  + `\n<link rel="stylesheet" href="/assets/fit-mobile.css?v=20261018g" ${MARK}>`
 // The homepage's own stylesheet (owner glow, headline rule, scroll cue). The
 // intro gate and its poster preload were removed on 18 October 2026.
 // ?v= because the host caches stylesheets and scripts: bump it when the file
