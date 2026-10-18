@@ -26,6 +26,12 @@
 	<!-- / Yoast SEO Premium plugin. -->
 
 
+<!-- The two photo bands further down (the badge band's overlay photo and the "Book Now" band) load their
+     pictures once they come within 1250px of the screen (the browser's own lazy-loading distance) instead of competing
+     with the top photo. Without JavaScript the class is never set and they load as before. -->
+<script>document.documentElement.classList.add('fit-lazybg')</script>
+<style>.fit-lazybg .elementor-12 .elementor-element.elementor-element-db42b6a:not(.fit-lazybg-in)::before,.fit-lazybg .elementor-12 .elementor-element.elementor-element-eb25e37:not(.fit-lazybg-in){background-image:none!important}</style>
+<script>document.addEventListener('DOMContentLoaded',function(){var els=document.querySelectorAll('.elementor-12 .elementor-element-db42b6a, .elementor-12 .elementor-element-eb25e37'),i;function show(el){el.classList.add('fit-lazybg-in')}if(!('IntersectionObserver' in window)){for(i=0;i<els.length;i++)show(els[i]);return}var io=new IntersectionObserver(function(en){for(var j=0;j<en.length;j++){if(en[j].isIntersecting){show(en[j].target);io.unobserve(en[j].target)}}},{rootMargin:'1250px 0px'});for(i=0;i<els.length;i++)io.observe(els[i])})</script>
 <link rel='dns-prefetch' href='//www.googletagmanager.com' />
 <style id="wp-img-auto-sizes-contain-inline-css">
 img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
@@ -280,7 +286,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		</form>
 						</div>
 				<div class="elementor-element elementor-element-b4dba43 elementor-widget elementor-widget-image" data-id="b4dba43" data-element_type="widget" data-e-type="widget" data-widget_type="image.default">
-															<img decoding="async" width="800" height="154" src="/wp-content/uploads/2026/07/google-rating-with-golden-5-stars-1024x197.webp" class="attachment-large size-large wp-image-819" alt="" srcset="/wp-content/uploads/2026/07/google-rating-with-golden-5-stars-1024x197.webp 1024w, /wp-content/uploads/2026/07/google-rating-with-golden-5-stars-300x58.webp 300w, /wp-content/uploads/2026/07/google-rating-with-golden-5-stars-768x147.webp 768w, /wp-content/uploads/2026/07/google-rating-with-golden-5-stars.webp 1037w" sizes="(max-width: 800px) 100vw, 800px" />															</div>
+															<img loading="lazy" decoding="async" width="800" height="154" src="/wp-content/uploads/2026/07/google-rating-with-golden-5-stars-1024x197.webp" class="attachment-large size-large wp-image-819" alt="" srcset="/wp-content/uploads/2026/07/google-rating-with-golden-5-stars-1024x197.webp 1024w, /wp-content/uploads/2026/07/google-rating-with-golden-5-stars-300x58.webp 300w, /wp-content/uploads/2026/07/google-rating-with-golden-5-stars-768x147.webp 768w, /wp-content/uploads/2026/07/google-rating-with-golden-5-stars.webp 1037w" sizes="(max-width: 800px) 100vw, 800px" />															</div>
 				</div>
 				</div>
 					</div>
