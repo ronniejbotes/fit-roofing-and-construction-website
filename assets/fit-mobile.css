@@ -4,10 +4,13 @@
  * The owner's ask: "build everything for mobile first, as everyone uses their
  * phone these days". Every page was looked at on a 390x844 and a 360x800
  * screen; these are the faults that showed, each one measured before and
- * after. Every rule sits behind max-width: 767px, so tablets and desktops
- * render exactly as before. Linked on every page next to fit-motion.css by
- * tools/inject-motion.mjs, so `npm run motion:remove` takes it out with the
- * rest of the layer.
+ * after. Every rule in the first block sits behind max-width: 767px, so
+ * tablets and desktops render exactly as before. Linked on every page next to
+ * fit-motion.css by tools/inject-motion.mjs, so `npm run motion:remove` takes
+ * it out with the rest of the layer.
+ *
+ * The desktop review of 18 October 2026 added three blocks at the end, for
+ * tablet and desktop widths only; the phone block is unchanged.
  */
 @media (max-width: 767px) {
 
@@ -230,5 +233,67 @@
   .elementor-widget-breadcrumbs a {
     padding: 26px 6px 3px;
     margin: 0 -6px;
+  }
+}
+
+/*
+ * Desktop review, 18 October 2026. Measured at 1440, 1365, 1280, 1100, 1025
+ * and 768 to 1024 before and after; nothing below 768px changes.
+ */
+
+/* The header menu on narrow desktops. Its six links need 770px at 16px with
+   20px either side, and from 1025 to about 1360 the menu column is narrower
+   (570px at 1025, 723px at 1280), so "Contact" (and at 1100 "Roofing Blog")
+   wrapped to a second row and the fixed header grew from 102 to 132px. The
+   page below is pushed down by a copy of the header that wrapped differently,
+   so at 1280 the contact page's H1 started 6px under the header's edge. The
+   side padding now shrinks with the screen (7px from 1025 to 1143, 14px at
+   1280, 19.6px at 1400, 20px above) and below 1140 the links drop to 14px;
+   one row at every width, header 89 to 101px. The range runs past 1365 to
+   1400 because a Windows scrollbar takes 17px: a 1366px screen lays the page
+   out at 1349px, where the 20px padding still wrapped. Checked with and
+   without a scrollbar: one row everywhere, at least 10px to spare. */
+@media (min-width: 1025px) and (max-width: 1400px) {
+  .elementor-location-header .elementor-nav-menu--main .elementor-item {
+    padding-left: clamp(7px, 4.9vw - 49px, 20px) !important;
+    padding-right: clamp(7px, 4.9vw - 49px, 20px) !important;
+  }
+}
+@media (min-width: 1025px) and (max-width: 1139px) {
+  .elementor-location-header .elementor-nav-menu--main .elementor-item {
+    font-size: 14px !important;
+  }
+}
+
+/* The menu button on tablets, 768 to 1024px: the same rule as on phones
+   (15 October, in the phone block above). It was 33px square and #33373D on
+   the #1A1A1A header, about 1.5:1, and so was the close cross. 44px, in the
+   logo's light tone (about 13:1); the header stays 103px. The open menu
+   itself is not restyled. */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .elementor-location-header .elementor-menu-toggle {
+    width: 44px !important;
+    height: 44px !important;
+    padding: 9px !important;
+    margin-top: -5.5px !important;
+    margin-bottom: -5.5px !important;
+    color: #E9E1D6 !important;
+    fill: #E9E1D6 !important;
+  }
+  .elementor-location-header .elementor-menu-toggle svg {
+    width: 26px !important;
+    height: 26px !important;
+    fill: #E9E1D6 !important;
+  }
+}
+
+/* FAQ answers on the eleven service pages (roof replacement, attics, solar
+   panel removal and the rest) were 13px on tablets and desktops as well.
+   16px, as the phone block already sets. */
+@media (min-width: 768px) {
+  .elementor-element-74c50af, .elementor-element-4519de2, .elementor-element-78ae937,
+  .elementor-element-b240882, .elementor-element-3d948a3 {
+    font-size: 16px !important;
+    line-height: 1.55 !important;
   }
 }
