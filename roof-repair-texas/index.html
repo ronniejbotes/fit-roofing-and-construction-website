@@ -28,10 +28,10 @@
 
 <!-- The three photo bands below the first screen load their pictures once they come within 1250px of
      the screen (the browser's own lazy-loading distance) instead of competing with the top photo.
-     Without JavaScript the class is never set and they load as before. -->
+     Without JavaScript the class is never set and they load as before. The watcher is at the end of
+     the page. -->
 <script>document.documentElement.classList.add('fit-lazybg')</script>
 <style>.fit-lazybg .elementor-192 .elementor-element.elementor-element-16ede0f:not(.fit-lazybg-in),.fit-lazybg .elementor-192 .elementor-element.elementor-element-d86710a:not(.fit-lazybg-in),.fit-lazybg .elementor-192 .elementor-element.elementor-element-d8c92af:not(.fit-lazybg-in){background-image:none!important}</style>
-<script>document.addEventListener('DOMContentLoaded',function(){var els=document.querySelectorAll('.elementor-192 .elementor-element-16ede0f, .elementor-192 .elementor-element-d86710a, .elementor-192 .elementor-element-d8c92af'),i;function show(el){el.classList.add('fit-lazybg-in')}if(!('IntersectionObserver' in window)){for(i=0;i<els.length;i++)show(els[i]);return}var io=new IntersectionObserver(function(en){for(var j=0;j<en.length;j++){if(en[j].isIntersecting){show(en[j].target);io.unobserve(en[j].target)}}},{rootMargin:'1250px 0px'});for(i=0;i<els.length;i++)io.observe(els[i])})</script>
 <link rel='dns-prefetch' href='//www.googletagmanager.com' />
 <style id="wp-img-auto-sizes-contain-inline-css">
 img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
@@ -739,5 +739,7 @@ var ElementorProFrontendConfig = {"ajaxurl":"\/wp-admin\/admin-ajax.php","nonce"
 <script id="pro-elements-handlers-js" src="/wp-content/plugins/elementor-pro/assets/js/elements-handlers.min.js?ver=4.1.2"></script>
 
 <script src="/assets/fit-motion.js" defer data-fit-motion></script>
+<!-- Watcher for the photo bands that wait (see the note in <head>). -->
+<script>document.addEventListener('DOMContentLoaded',function(){var els=document.querySelectorAll('.elementor-192 .elementor-element-16ede0f, .elementor-192 .elementor-element-d86710a, .elementor-192 .elementor-element-d8c92af'),i;function show(el){el.classList.add('fit-lazybg-in')}if(!('IntersectionObserver' in window)){for(i=0;i<els.length;i++)show(els[i]);return}var io=new IntersectionObserver(function(en){for(var j=0;j<en.length;j++){if(en[j].isIntersecting){show(en[j].target);io.unobserve(en[j].target)}}},{rootMargin:'1250px 0px'});for(i=0;i<els.length;i++)io.observe(els[i])})</script>
 </body>
 </html>
