@@ -36,7 +36,7 @@ const GUARD =
   `<script ${MARK}>(function(){try{var s=sessionStorage,k='fit-nav',v=s.getItem(k);s.removeItem(k);` +
   `if(v==='1'&&!(matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))` +
   `document.documentElement.classList.add('fit-arriving')}catch(e){}})()</script>`
-const HEAD_CSS = `<link rel="stylesheet" href="/assets/fit-motion.css" ${MARK}>`
+const HEAD_CSS = `<link rel="stylesheet" href="/assets/fit-motion.css?v=20261018g" ${MARK}>`
   // Phone fixes (15 October 2026), every rule behind max-width: 767px. The
   // ?v= is there because the host caches stylesheets for 7 days: bump it when
   // the file changes.
@@ -48,7 +48,7 @@ const HEAD_CSS = `<link rel="stylesheet" href="/assets/fit-motion.css" ${MARK}>`
 const HEAD_HOME = [
   `<link rel="stylesheet" href="/assets/fit-home.css?v=20261018g" ${MARK}>`,
 ]
-const BODY_JS = `<script src="/assets/fit-motion.js" defer ${MARK}></script>`
+const BODY_JS = `<script src="/assets/fit-motion.js?v=20261018g" defer ${MARK}></script>`
 const BODY_HOME = `<script src="/assets/fit-home.js?v=20261018g" defer ${MARK}></script>`
 // /portfolio/ is a rebuilt page (its body is hand-written, see MOTION.md);
 // it carries its own stylesheet and script, and preloads the display face
@@ -59,7 +59,7 @@ const HEAD_PORTFOLIO = [
   // file changes.
   `<link rel="stylesheet" href="/assets/fit-portfolio.css?v=20261016" ${MARK}>`,
 ]
-const BODY_PORTFOLIO = `<script src="/assets/fit-portfolio.js" defer ${MARK}></script>`
+const BODY_PORTFOLIO = `<script src="/assets/fit-portfolio.js?v=20261018g" defer ${MARK}></script>`
 
 async function walk(dir, out = []) {
   for (const e of await readdir(dir, { withFileTypes: true })) {
