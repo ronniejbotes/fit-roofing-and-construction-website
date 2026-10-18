@@ -38,7 +38,7 @@
     return !!el.closest(
       'header, footer, .elementor-location-header, .elementor-location-footer, ' +
       '.elementor-widget-form, form, .elementor-widget-nav-menu, ' +
-      '.elementor-widget-theme-site-logo, [data-fit-reveal], .fit-card, .fit-tile, #fit-build-gate'
+      '.elementor-widget-theme-site-logo, [data-fit-reveal], .fit-card, .fit-tile'
     )
   }
 
@@ -149,7 +149,7 @@
       var widget = heads[h].closest('.elementor-widget')
       if (!widget || !hasBox(widget)) continue
       if (widget.closest('header, footer, .elementor-location-header, .elementor-location-footer, ' +
-                         '.fit-card, .fit-tile, form, .elementor-widget-form, #fit-build-gate')) continue
+                         '.fit-card, .fit-tile, form, .elementor-widget-form')) continue
       var next = widget.nextElementSibling
       if (next && next.classList.contains('elementor-widget-divider')) continue
       heads[h].classList.add('fit-h2')
@@ -416,7 +416,7 @@
    * Leaving: an ordinary same-origin link click plays the roofline curtain
    * and then navigates. Everything that is not an ordinary page navigation is
    * left alone — modifier clicks, new tabs, downloads, tel:/mailto:, in-page
-   * anchors, files, the gate, and anything a form does.
+   * anchors, files, and anything a form does.
    *
    * Arriving: the inline guard in <head> has already put html.fit-arriving on
    * from the sessionStorage flag (and cleared the flag). The CSS animation
@@ -448,7 +448,6 @@
       if (!a) return
       if (a.target && a.target !== '_self') return
       if (a.hasAttribute('download') || a.hasAttribute('data-no-transition')) return
-      if (a.closest('#fit-build-gate')) return
       // SmartMenus (Elementor's nav) opens a submenu on the first tap of a
       // parent item and on its arrow; those taps must never navigate. The
       // listener is in the bubble phase so e.defaultPrevented above reflects

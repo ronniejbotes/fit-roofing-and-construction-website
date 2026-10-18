@@ -10,7 +10,7 @@ of through a page builder.
 **The mirrored markup has not been rewritten, with one exception.** The capture is faithful,
 including the things that are wrong on the live site. What has been added on top of it is a
 **motion layer** — scroll reveals, hover polish, a roofline page transition, a parallax hero
-and a click-to-enter gate on the homepage — as a handful of files and a tag-injection script
+(the homepage's click-to-enter gate was removed on 18 October 2026) — as a handful of files and a tag-injection script
 that can strip itself out again. The exception is **`/portfolio/`**, whose page body was
 rebuilt by hand from a supplied template, on the company's real photographs and copy. See
 **[MOTION.md](MOTION.md)** for both. The lead forms render and validate but do not submit

@@ -1,5 +1,6 @@
 /**
- * Keyboard and focus behaviour of the gate.
+ * Keyboard and focus behaviour of the homepage on arrival. (Until 18 October
+ * 2026 this checked the intro gate's focus trap; the gate has been removed.)
  * Needs `npm run serve` on :4400.
  *
  *   npm run motion:qa:keys
@@ -19,68 +20,34 @@ const page = await ctx.newPage()
 const errors = []
 page.on('pageerror', (e) => errors.push(String(e.message || e)))
 
-const where = () => page.evaluate(() => {
-  const a = document.activeElement
-  if (!a) return 'null'
-  const inGate = !!a.closest('#fit-build-gate')
-  return `${a.tagName.toLowerCase()}${a.id ? '#' + a.id : ''}${a.className ? '.' + String(a.className).split(' ')[0] : ''} inGate=${inGate}`
-})
-
-note('[focus] / — gate up')
+note('[focus] / — opens on the page (the intro gate was removed 18 October 2026)')
 await page.goto(BASE + '/', { waitUntil: 'load' })
 await page.waitForTimeout(500)
-if (!(await page.$('#fit-build-gate'))) bad('gate not present')
-
-const inertCount = await page.evaluate(() => document.querySelectorAll('body > [inert]').length)
-note(`  inert body children: ${inertCount}`)
-if (!inertCount) bad('nothing was made inert behind the gate')
-
-note('  initial focus: ' + await where())
-const seq = []
-for (let i = 0; i < 6; i++) {
-  await page.keyboard.press('Tab')
-  seq.push(await where())
-}
-note('  after 6× Tab: ' + seq.join(' → '))
-if (seq.some((s) => s.includes('inGate=false'))) bad('Tab escaped the gate')
-
-await page.keyboard.press('Shift+Tab')
-note('  after Shift+Tab: ' + await where())
-
-// Space on the focused Skip/button must work (scroll keys are blocked elsewhere).
-await page.focus('.fit-gate-btn')
-await page.keyboard.press('Space')
-await page.waitForTimeout(400)
-const playing = await page.evaluate(() => document.querySelector('#fit-build-gate')?.getAttribute('data-state'))
-note(`  Space on the button → state=${playing}`)
-if (playing !== 'playing') bad('Space on the gate button did not start playback')
-note('  focus while playing: ' + await where())
-const btnTab = await page.evaluate(() => document.querySelector('.fit-gate-btn')?.tabIndex)
-if (btnTab !== -1) bad('faded gate button still in the tab order')
-
-await page.keyboard.press('Escape')
-await page.waitForTimeout(300)
-const after = await page.evaluate(() => ({
-  state: document.querySelector('#fit-build-gate')?.getAttribute('data-state') || 'removed',
+const start = await page.evaluate(() => ({
+  gate: !!document.querySelector('#fit-build-gate'),
   locked: document.documentElement.classList.contains('fit-gate-open'),
-  inertLeft: document.querySelectorAll('[inert]').length,
-  focus: (document.activeElement && document.activeElement.tagName.toLowerCase()) || 'none',
-  focusText: (document.activeElement && document.activeElement.textContent || '').trim().slice(0, 40),
-  underGate: document.querySelectorAll('[data-fit-under-gate]').length,
+  inert: document.querySelectorAll('[inert]').length,
 }))
-note('  after Escape: ' + JSON.stringify(after))
-if (after.locked) bad('scroll still locked after Escape')
-if (after.inertLeft) bad(`${after.inertLeft} element(s) still inert after Escape`)
-if (after.focus !== 'h1') bad('focus was not handed to the headline after the gate')
-if (after.underGate) bad('data-fit-under-gate marks left behind')
+note('  ' + JSON.stringify(start))
+if (start.gate || start.locked) bad('intro gate is back on /')
+if (start.inert) bad(`${start.inert} element(s) inert on arrival`)
 
-// Scroll must work now.
+// First Tab must reach the page itself (skip link or header), not a dialog.
+await page.keyboard.press('Tab')
+const first = await page.evaluate(() => {
+  const a = document.activeElement
+  return a ? `${a.tagName.toLowerCase()}${a.className ? '.' + String(a.className).split(' ')[0] : ''}` : 'none'
+})
+note('  first Tab → ' + first)
+if (first === 'body' || first === 'none') bad('first Tab did not reach anything on the page')
+
+// Scroll must work at once.
 await page.mouse.move(700, 450)
 await page.mouse.wheel(0, 600)
 await page.waitForTimeout(300)
 const y = await page.evaluate(() => window.scrollY)
-note(`  wheel after gate → scrollY=${y}`)
-if (y === 0) bad('page does not scroll after the gate closed (blockers left attached?)')
+note(`  wheel on arrival → scrollY=${y}`)
+if (y === 0) bad('page does not scroll on arrival')
 
 // Tab from the top must not land on an invisible reveal target.
 await page.evaluate(() => window.scrollTo(0, 0))

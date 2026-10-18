@@ -10,7 +10,7 @@
  * before the body paints — that is what makes the roofline curtain seamless)
  * and assets/fit-motion.css; and before </body>, assets/fit-motion.js. The
  * landing page (index.html at the root) also gets assets/fit-home.{css,js}:
- * the gate, the owner glow and the scroll cue.
+ * the owner glow, the headline rule and the scroll cue.
  *
  * Idempotent: a page already carrying the tags is left alone, so it is safe
  * to re-run after a fresh mirror capture. Every tag carries data-fit-motion,
@@ -41,14 +41,15 @@ const HEAD_CSS = `<link rel="stylesheet" href="/assets/fit-motion.css" ${MARK}>`
   // ?v= is there because the host caches stylesheets for 7 days: bump it when
   // the file changes.
   + `\n<link rel="stylesheet" href="/assets/fit-mobile.css?v=20261018e" ${MARK}>`
-// The gate is desktop-only (GATE_MIN_WIDTH in fit-home.js), so the poster is
-// preloaded only where it will be shown — a phone never pays for it.
+// The homepage's own stylesheet (owner glow, headline rule, scroll cue). The
+// intro gate and its poster preload were removed on 18 October 2026.
+// ?v= because the host caches stylesheets and scripts: bump it when the file
+// changes (20261018g: the gate came out, so a cached copy must not linger).
 const HEAD_HOME = [
-  `<link rel="preload" as="image" href="/assets/gate/build-gate-poster.jpg" media="(min-width: 768px)" ${MARK}>`,
-  `<link rel="stylesheet" href="/assets/fit-home.css" ${MARK}>`,
+  `<link rel="stylesheet" href="/assets/fit-home.css?v=20261018g" ${MARK}>`,
 ]
 const BODY_JS = `<script src="/assets/fit-motion.js" defer ${MARK}></script>`
-const BODY_HOME = `<script src="/assets/fit-home.js" defer ${MARK}></script>`
+const BODY_HOME = `<script src="/assets/fit-home.js?v=20261018g" defer ${MARK}></script>`
 // /portfolio/ is a rebuilt page (its body is hand-written, see MOTION.md);
 // it carries its own stylesheet and script, and preloads the display face
 // its headline is set in.

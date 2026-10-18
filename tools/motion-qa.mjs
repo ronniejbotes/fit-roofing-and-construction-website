@@ -50,7 +50,7 @@ async function watch(page, label) {
 
 const browser = await chromium.launch({ executablePath: CHROME, headless: true })
 
-/* ---------------- Desktop: gate → hero → scroll → hover → transition ---- */
+/* ---------------- Desktop: hero → scroll → hover → transition ----------- */
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 })
   await blockAnalytics(ctx)
@@ -62,51 +62,25 @@ const browser = await chromium.launch({ executablePath: CHROME, headless: true }
   const page = await ctx.newPage()
   const report = await watch(page, 'desktop /')
 
-  note('\n[desktop] / — gate')
+  note('\n[desktop] / — no gate (removed 18 October 2026)')
   await page.goto(BASE + '/', { waitUntil: 'load' })
   await page.waitForTimeout(600)
-  const gate = await page.$('#fit-build-gate')
-  if (!gate) bad('gate not present on /')
-  else {
-    const state = await gate.getAttribute('data-state')
-    const locked = await page.evaluate(() => document.documentElement.classList.contains('fit-gate-open'))
-    note(`  gate state=${state} locked=${locked}`)
-    await page.screenshot({ path: join(OUT, '01-gate-closed.png') })
-
-    // Scroll must be refused while closed.
-    await page.mouse.move(700, 450)
-    await page.mouse.wheel(0, 800)
-    await page.waitForTimeout(200)
-    const y0 = await page.evaluate(() => window.scrollY)
-    if (y0 !== 0) bad(`scroll not locked behind gate (scrollY=${y0})`)
-    else note('  scroll locked ✓')
-
-    const btnText = await page.textContent('.fit-gate-btn')
-    const kicker = await page.textContent('.fit-gate-kicker')
-    note(`  copy: "${kicker}" / "${btnText}"`)
-
-    // Which fixed elements are not ours? (finds the chat launcher selector)
-    const fixed = await page.evaluate(() => Array.from(document.querySelectorAll('body *'))
-      .filter((el) => getComputedStyle(el).position === 'fixed' && !el.closest('#fit-build-gate'))
-      .map((el) => `${el.tagName.toLowerCase()}#${el.id || '-'}.${(el.className && el.className.toString().split(' ').slice(0, 3).join('.')) || '-'} z=${getComputedStyle(el).zIndex} vis=${getComputedStyle(el).visibility} ${el.src ? 'src=' + el.src.slice(0, 60) : ''}`))
-    note('  fixed elements (not gate):\n     ' + (fixed.join('\n     ') || '(none)'))
-
-    await page.click('.fit-gate-btn')
-    await page.waitForTimeout(1200)
-    await page.screenshot({ path: join(OUT, '02-gate-playing.png') })
-    const playing = await page.evaluate(() => {
-      const v = document.querySelector('.fit-gate-video')
-      return v ? { paused: v.paused, t: v.currentTime.toFixed(2), dur: v.duration, state: document.querySelector('#fit-build-gate')?.getAttribute('data-state') } : null
-    })
-    note(`  playing: ${JSON.stringify(playing)}`)
-    if (!playing || playing.paused) bad('video did not start playing after click')
-
-    await page.waitForFunction(() => !document.querySelector('#fit-build-gate'), null, { timeout: 12000 }).catch(() => bad('gate never removed itself'))
-    await page.waitForTimeout(400)
-    const unlocked = await page.evaluate(() => !document.documentElement.classList.contains('fit-gate-open'))
-    if (!unlocked) bad('scroll still locked after gate')
-    await page.screenshot({ path: join(OUT, '03-after-gate-hero.png') })
-  }
+  const gateLeft = await page.evaluate(() => ({
+    gate: !!document.querySelector('#fit-build-gate'),
+    locked: document.documentElement.classList.contains('fit-gate-open'),
+    clip: performance.getEntriesByType('resource').filter((r) => /\/assets\/gate\//.test(r.name)).length,
+  }))
+  if (gateLeft.gate || gateLeft.locked) bad('intro gate is back on / (removed 18 October 2026)')
+  if (gateLeft.clip) bad('the removed gate clip/poster is still being requested')
+  await page.screenshot({ path: join(OUT, '01-hero-first-paint.png') })
+  await page.mouse.move(700, 450)
+  await page.mouse.wheel(0, 800)
+  await page.waitForTimeout(300)
+  const y0 = await page.evaluate(() => window.scrollY)
+  if (y0 === 0) bad('homepage does not scroll on arrival')
+  else note('  opens on the hero and scrolls ✓')
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await page.waitForTimeout(300)
 
   note('[desktop] / — hero + tags')
   const tags = await page.evaluate(() => ({
@@ -244,14 +218,14 @@ const browser = await chromium.launch({ executablePath: CHROME, headless: true }
       arrivingLeft: document.documentElement.classList.contains('fit-arriving'),
     }))
     note('  ' + JSON.stringify(aboutTags))
-    if (aboutTags.gate) bad('gate appeared on /about/ (must be homepage only)')
+    if (aboutTags.gate) bad('intro gate appeared on /about/ (removed 18 October 2026)')
     if (aboutTags.arrivingLeft) bad('fit-arriving class never dropped')
   }
   report()
   await ctx.close()
 }
 
-/* ---------------- Mobile: gate skip + scroll ----------------------------- */
+/* ---------------- Mobile: no gate + scroll ------------------------------- */
 {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true })
   await blockAnalytics(ctx)
@@ -261,13 +235,12 @@ const browser = await chromium.launch({ executablePath: CHROME, headless: true }
   await page.goto(BASE + '/', { waitUntil: 'load' })
   await page.waitForTimeout(600)
   await page.screenshot({ path: join(OUT, '20-m-first.png') })
-  // Phones get no gate by design (GATE_MIN_WIDTH in fit-home.js).
+  // The intro gate was removed on 18 October 2026.
   const mGate = await page.evaluate(() => ({
     gate: !!document.querySelector('#fit-build-gate'),
     locked: document.documentElement.classList.contains('fit-gate-open'),
-    minWidth: 768,
   }))
-  if (mGate.gate || mGate.locked) bad('mobile: gate appeared under 768px (should be skipped by GATE_MIN_WIDTH)')
+  if (mGate.gate || mGate.locked) bad('mobile: intro gate is back on /')
   else note('  no gate on a phone ✓')
   await page.screenshot({ path: join(OUT, '21-m-hero.png') })
   await page.evaluate(() => window.scrollTo(0, 2400))

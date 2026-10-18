@@ -1,7 +1,8 @@
 # The motion layer
 
-Scroll reveals, hover polish, a roofline page transition, a parallax hero and — on the
-homepage — a click-to-enter gate that shows a roof being built. Added 20 September 2026 on
+Scroll reveals, hover polish, a roofline page transition and a parallax hero. (Until
+18 October 2026 the homepage also had a click-to-enter gate that showed a roof being built;
+it was removed at the owner's request, see *The gate (removed)* below.) Added 20 September 2026 on
 top of the mirror, as four files and one tag-injection script. Nothing in the mirrored
 markup was rewritten; the layer finds its targets at runtime.
 
@@ -15,10 +16,9 @@ is what draws under every section title, and the palette is the Elementor kit's 
 | File | Loaded on | What it does |
 |---|---|---|
 | `assets/fit-motion.css` / `.js` | every page | Reveals, the roofline transition, the hero layer, header polish, the reading-progress hairline, hover, card tilt |
-| `assets/fit-home.css` / `.js` | `/` only | The gate, the owner-portrait glow, the headline rule, the scroll cue |
-| `assets/gate/build-gate.mp4`, `.webm`, `build-gate-poster.jpg` | `/` only, fetched after `load` | The 5-second clip and its first frame |
+| `assets/fit-home.css` / `.js` | `/` only | The owner-portrait glow, the headline rule, the scroll cue |
 | `tools/inject-motion.mjs` | — | Puts the tags into every page, or takes them out |
-| `tools/motion-qa.mjs`, `tools/motion-a11y.mjs` | — | Drive it all in Chromium: gate, scroll, hover, transition, mobile, reduced motion, keyboard |
+| `tools/motion-qa.mjs`, `tools/motion-a11y.mjs` | — | Drive it all in Chromium: no gate, scroll, hover, transition, mobile, reduced motion, keyboard |
 
 ```bash
 npm run motion          # inject into all 46 pages (idempotent)
@@ -48,30 +48,17 @@ re-saved in the editor, so cards, tiles, headings and the hero are found by widg
 structure — a container holding image + heading + button is a card; icon + heading is a
 tile; the first page container with a cover photograph is the hero.
 
-### The gate (`/`)
+### The gate (removed 18 October 2026)
 
-Modelled on the In The Light Roofing gate. You arrive on frame 0 of the clip (the house
-stripped to bare sheathing, bundles stacked at the ridge), read the three words from the
-logo, click **Build it the F.I.T. way**, watch the shingles go on, and are let through. The
-clip was generated *between* two stills — a clean start frame and the homepage hero
-photograph itself — so the poster carries no lettering and the crossfade lands on the
-picture the video just ended on. Scroll is locked while it is up (`overflow`, plus wheel/touch/key blocking for
-iOS). Every failure path lets the visitor in: reduced motion, a refused `play()`, a missing
-file, a stalled download, Escape, **Skip**, and a failsafe timer sized from the clip's real
-duration. The chat launcher (`z-index: 2147483647`, which nothing can out-stack) is hidden
-while the gate is up so it cannot sit on Skip. The video is not fetched until the page has
-finished loading.
-
-**Who gets the door.** ITLR shows it on every load and notes that is worth weighing on a
-site whose job is to move people toward a quote. This homepage is the page that ranks and
-it sells emergency storm work, so here the door is a first-arrival moment, not a toll:
-once per tab (`GATE_ONCE_PER_SESSION = true`); never when arriving by the site's own
-roofline transition — the logo, the Home link — because that visitor is already inside;
-and **not on phones** (`GATE_MIN_WIDTH = 768`), because a full-screen dialog between a
-search result and the phone number is exactly what Google's intrusive-interstitial
-guidance warns about, and a 16:9 clip shows a phone only its middle quarter anyway. Both
-are one-line changes in `fit-home.js`. The gate's ground is the kit's ink, not white, so a
-slow connection never opens the dark site on a blank white screen.
+Until 18 October 2026 the homepage opened behind a full-screen "Build it the F.I.T. way"
+gate: a 5-second clip of the roof going on, with **Skip**, shown once per tab on desktop.
+An SEOptimer audit the owner ran that night flagged it, and the owner had already warned
+both companies it might go, so it was removed completely: the markup and script in
+`fit-home.js`, its styles in `fit-home.css`, the poster preload in `index.html` and
+`tools/inject-motion.mjs`, the `fit-gate-seen` session flag, and the clip files
+(`assets/gate/build-gate.mp4`, `.webm`, `build-gate-poster.jpg`, used by no other page).
+The homepage now opens straight on the hero. Everything is in git history (the commit
+before the removal) if it is ever wanted back.
 
 ### The roofline transition
 
@@ -81,7 +68,7 @@ with a `sessionStorage` flag set. The next page's inline head guard reads and cl
 flag and puts `html.fit-arriving` on *before the body paints*, so the same gable is already
 covering the page at first paint and lifts away by a pure CSS animation — it finishes even
 if the script on that page never runs. Not intercepted: modifier clicks, `target=_blank`,
-downloads, `tel:`/`mailto:`, in-page anchors, files, the gate, anything inside a form.
+downloads, `tel:`/`mailto:`, in-page anchors, files, anything inside a form.
 bfcache restores snap both classes off.
 
 ### The hero
@@ -355,6 +342,8 @@ writes `zoom` or nothing), and three comments describing a design that had been 
 
 ## Verified
 
+_The gate items below are history: the gate was removed on 18 October 2026, and `motion:qa` / `motion:qa:keys` now check that it is gone._
+
 `npm run motion:qa` and `npm run motion:qa:keys` drive it in Chromium (last run 21
 September 2026, after two agent review rounds — the first on JS, CSS, accessibility, brand
 and visual, the second on correctness, performance, cruft, degradation and integration —
@@ -415,10 +404,8 @@ live, `npm run motion:remove` first, then `npm run motion` again.
 
 ## For the client, before this ships
 
-1. **The gate copy.** "Foundation. Integrity. Trust." is what F.I.T. stands for and is in
-   the logo; "Build it the F.I.T. way" is the homepage's own phrase. Both are the company's
-   words, but the client should approve them as a button.
-2. **The clip is AI-generated** (Higgsfield; 21 credits across four attempts). The first
+1. **The gate copy.** Moot since 18 October 2026: the gate was removed.
+2. **The clip is AI-generated** (moot since 18 October 2026: removed with the gate) (Higgsfield; 21 credits across four attempts). The first
    three, prompted text-free, still printed garbled brand-like marks on the underlayment or
    the sheathing — one with a ® symbol, which is an implied endorsement of a product that
    does not exist. The shipped clip was driven from a generated **start frame** (bare,
@@ -431,10 +418,7 @@ live, `npm run motion:remove` first, then `npm run motion` again.
    `qMYqUG_convSearchResultHighlightRoot` div with `data-message-model-slug="gpt-5-5"` and
    dozens of Tailwind classes — `index.html` line 212). It is on the live site and renders
    fine, but it is junk in the source and worth cleaning in Elementor.
-4. **The gate policy.** Shipped as once per tab, desktop only, never on internal
-   navigation (see above). If the client wants it on phones too, or on every arrival, it is
-   `GATE_MIN_WIDTH` / `GATE_ONCE_PER_SESSION` in `fit-home.js` — but the SEO trade-off on
-   the ranking page should be a knowing decision.
+4. **The gate policy.** Decided 18 October 2026: the gate was removed on the owner's say-so.
 5. **The founder's quote reads "one simple believe"** on the live homepage and now, large,
    on the portfolio page. It is the client's copy and was reproduced, not corrected. One
    word to change on their say-so ("belief"), in both places.
