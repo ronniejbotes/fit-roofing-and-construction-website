@@ -66,6 +66,8 @@
 /category/uncategorized/  /uncategorized/  301
 /home                     /                301
 /home/                    /                301
+/home-2                   /                301
+/home-2/                  /                301
 
 # ---- Feeds, switched off -----------------------------------------------------
 # Every feed 301s to the page it belongs to. The specific rules must stay above

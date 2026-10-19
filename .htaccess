@@ -145,6 +145,9 @@ RewriteRule ^2026(/.*)?$  /  [R=301,L]
 # header logo on every page until 856d749.
 RewriteRule ^category/uncategorized/?$  /uncategorized/  [R=301,L]
 RewriteRule ^home/?$                    /                [R=301,L]
+# /home-2/ is the old demo copy of the homepage, linked from nowhere and
+# unknown to Google (URL Inspection, 4 October 2026). The folder stays.
+RewriteRule ^home-2/?$                  /                [R=301,L]
 
 # ---- Feeds, switched off ----------------------------------------------------
 # /comments/feed/ must stay above the /:slug/feed/ pattern, or it would be sent
