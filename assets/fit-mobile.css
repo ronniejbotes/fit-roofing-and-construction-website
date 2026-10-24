@@ -386,7 +386,8 @@
    card (1px primary border, 25px corners and padding, the same heading and
    text). The text stops at about 75 characters a line so it stays readable
    across 1,120px. Positioned, like Elementor's own blocks, so it paints
-   above the section's 90% black overlay. */
+   above the section's 90% black overlay. Batch 3 (24 Oct 2026) puts the same
+   card, with these class names, on /fort-worth/ and /arlington/ too. */
 .fit-plano-permits {
   position: relative;
   box-sizing: border-box;
