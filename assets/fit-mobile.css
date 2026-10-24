@@ -413,3 +413,6 @@
   line-height: 24px;
   color: #A7A7A7;
 }
+
+/* Batch 2 (24 Oct 2026): the Service Coverage card on the town pages got shorter text; stretch it to the map's height from tablet width up. */
+@media (min-width: 768px){.elementor-element.elementor-element-ec7c6c7{--align-self:stretch;align-self:stretch}}
