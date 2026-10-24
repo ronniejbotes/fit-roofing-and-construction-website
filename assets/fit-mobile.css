@@ -314,3 +314,102 @@
 .elementor-icon-box-description a.fit-inherit { color: inherit; }
 /* The Google map in the footer of every page (was style="border:0;"). */
 .elementor-widget-html iframe.fit-map { border: 0; }
+
+/* The phone number in the header, 24 October 2026. (214) 714-0071 as a
+   tap-to-call text link on every page, set like the menu links (AR One Sans
+   600, white, the accent #A1805A on hover). The menu column has no width to
+   spare (the narrow-desktop block above), so from 768px up the number sits
+   in the button column, right-aligned above "Get A Free Inspection"; that
+   column loses its 10px top and bottom padding (it has no background) so the
+   header keeps its height. On phones the button column is hidden, so a
+   second copy sits in the bar between the logo and the menu button, inside
+   the menu widget and on the button's row (the button's -5.5px top margin
+   from the phone block above; 44px button plus 8px gap), so it follows the
+   button as the logo grows. The open menu is not touched. */
+.fit-header-phone { display: none; }
+.fit-header-phone__link {
+  font-family: var(--e-global-typography-primary-font-family), Sans-serif;
+  font-weight: var(--e-global-typography-primary-font-weight);
+  font-size: 16px;
+  line-height: 20px;
+  color: #FFFFFF;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.fit-header-phone__link:hover,
+.fit-header-phone__link:focus { color: #A1805A; }
+@media (min-width: 768px) {
+  .elementor-location-header .elementor-element-42e07f3 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    row-gap: 4px !important;
+  }
+  /* flex, so the line is exactly the link's height (a block's own line box
+     was 6px taller and grew the header at 1025 to 1139) */
+  .fit-header-phone--wide {
+    display: flex;
+    justify-content: flex-end;
+  }
+  /* a 28px tap area without making the line taller */
+  .fit-header-phone--wide .fit-header-phone__link {
+    display: inline-block;
+    padding: 4px 0;
+    margin: -4px 0;
+  }
+}
+/* Where the button text wraps to two lines (56px tall) and the menu drops
+   to 14px. */
+@media (min-width: 768px) and (max-width: 1139px) {
+  .elementor-location-header .elementor-element-42e07f3 { row-gap: 2px !important; }
+  .fit-header-phone--wide .fit-header-phone__link { font-size: 14px; line-height: 18px; }
+}
+@media (max-width: 767px) {
+  .fit-header-phone--bar {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: -5.5px;
+    right: 52px;
+    height: 44px;
+  }
+  .fit-header-phone--bar .fit-header-phone__link {
+    font-size: 15px;
+    line-height: 44px;
+  }
+}
+@media (max-width: 374px) {
+  .fit-header-phone--bar .fit-header-phone__link { font-size: 13px; }
+}
+
+/* /plano/: the "Plano roof permits" card, 24 October 2026. It sits under the
+   Service Coverage card and the map, across the full row, drawn like that
+   card (1px primary border, 25px corners and padding, the same heading and
+   text). The text stops at about 75 characters a line so it stays readable
+   across 1,120px. Positioned, like Elementor's own blocks, so it paints
+   above the section's 90% black overlay. */
+.fit-plano-permits {
+  position: relative;
+  box-sizing: border-box;
+  width: calc(100% - 20px);
+  margin: 10px;
+  padding: 25px;
+  border: 1px solid var(--e-global-color-primary);
+  border-radius: 25px;
+}
+.fit-plano-permits__title {
+  margin: 0 0 20px;
+  font-family: "AR One Sans", Sans-serif;
+  font-size: 35px;
+  font-weight: 600;
+  line-height: 1;
+  color: #FFFFFF;
+}
+.fit-plano-permits p {
+  max-width: 46em;
+  margin: 0;
+  font-family: "Roboto", Sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #A7A7A7;
+}
