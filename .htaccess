@@ -53,6 +53,8 @@ Options -Indexes
         Header set Cache-Control "no-cache"
     </FilesMatch>
     Header unset Expires
+    # HTTPS only, raised in steps (five minutes first). No includeSubDomains or preload until every subdomain, mail included, is known to answer over https.
+    Header always set Strict-Transport-Security "max-age=300"
 </IfModule>
 
 # Stored enquiries carry a name, a phone number and an address. _forms/leads/
