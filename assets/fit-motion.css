@@ -546,12 +546,18 @@ html.fit-motion .elementor-widget-counter[data-fit-reveal]:not(.fit-in) { transf
 /* ==========================================================================
    9. Guides and area lists: plain link blocks that sit just before the
    closing call to action on service, city and area pages. Static, no motion.
+   Dark like the sections around them (28 Oct 2026: on white they broke the
+   page); the shadow carries the band's colour edge to edge without widening
+   the page.
    ========================================================================== */
 .fit-guides {
   box-sizing: border-box;
   max-width: 1140px;
   margin: 0 auto;
   padding: 56px 20px;
+  background: var(--fit-ink);
+  box-shadow: 0 0 0 100vmax var(--fit-ink);
+  clip-path: inset(0 -100vmax);
 }
 .fit-guides h2 {
   margin: 0 0 20px;
@@ -559,7 +565,7 @@ html.fit-motion .elementor-widget-counter[data-fit-reveal]:not(.fit-in) { transf
   font-weight: 600;
   font-size: 30px;
   line-height: 1.2;
-  color: var(--fit-ink);
+  color: #FFFFFF;
 }
 .fit-guides ul {
   margin: 0;
@@ -575,14 +581,14 @@ html.fit-motion .elementor-widget-counter[data-fit-reveal]:not(.fit-in) { transf
   font-family: var(--e-global-typography-text-font-family, "Roboto"), sans-serif;
   font-size: 18px;
   line-height: 1.5;
-  color: var(--fit-primary);
+  color: var(--fit-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
   overflow-wrap: anywhere;
 }
 .fit-guides a:hover,
 .fit-guides a:focus-visible {
-  color: var(--fit-ink);
+  color: #FFFFFF;
 }
 @media (max-width: 767px) {
   .fit-guides {

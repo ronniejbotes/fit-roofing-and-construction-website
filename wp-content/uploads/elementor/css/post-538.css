@@ -14,3 +14,18 @@
 .elementor-538 .elementor-element.elementor-element-7f69e4f{--container-widget-width:90%;width:90%;max-width:90%;}
 .elementor-538 .elementor-element.elementor-element-7f69e4f .elementor-heading-title{font-size:42px;line-height:1.1;}
 }
+
+/* Hero, 28 October 2026: a photograph behind the headline, as on /plano/ (owner: "the only service
+   area page that looks nice is Plano"). Plano's overlay keeps the centre readable and fades the foot
+   into the black band below. Illustration, not a photograph of a job. */
+.elementor-538 .elementor-element.elementor-element-7f96697:not(.elementor-motion-effects-element-type-background){background-image:url("/assets/images/dallas-brick-home-roof-golden-hour-1920.webp");background-position:center 60%;background-repeat:no-repeat;background-size:cover;}
+.elementor-538 .elementor-element.elementor-element-7f96697{--overlay-opacity:1;}
+.elementor-538 .elementor-element.elementor-element-7f96697::before{background-color:transparent;background-image:radial-gradient(ellipse 75% 65% at 50% 50%,rgba(10,10,10,.5) 0%,rgba(10,10,10,.68) 70%,rgba(10,10,10,.82) 100%),linear-gradient(180deg,rgba(10,10,10,.5) 0%,rgba(10,10,10,0) 28%,rgba(10,10,10,0) 64%,#000 100%);}
+.elementor-538 .elementor-element.elementor-element-7f69e4f .elementor-heading-title{text-shadow:0 2px 28px rgba(0,0,0,.45);}
+.elementor-538 .elementor-element.elementor-element-6e16d32{font-size:21px;line-height:1.55;color:rgba(255,255,255,.92);text-shadow:0 1px 18px rgba(0,0,0,.5);max-width:min(65%,780px);}
+@media(max-width:767px){
+.elementor-538 .elementor-element.elementor-element-7f96697:not(.elementor-motion-effects-element-type-background){background-image:url("/assets/images/dallas-brick-home-roof-golden-hour-1024.webp");background-position:34% center;}
+.elementor-538 .elementor-element.elementor-element-6e16d32{font-size:17px;max-width:298px;}
+.elementor-538 .elementor-element.elementor-element-7f69e4f{--container-widget-width:90%;width:90%;max-width:90%;}
+.elementor-538 .elementor-element.elementor-element-7f69e4f .elementor-heading-title{font-size:42px;line-height:1.1;}
+}

@@ -36,7 +36,7 @@ const GUARD =
   `<script ${MARK}>(function(){try{var s=sessionStorage,k='fit-nav',v=s.getItem(k);s.removeItem(k);` +
   `if(v==='1'&&!(matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))` +
   `document.documentElement.classList.add('fit-arriving')}catch(e){}})()</script>`
-const HEAD_CSS = `<link rel="stylesheet" href="/assets/fit-motion.css?v=20261018g" ${MARK}>`
+const HEAD_CSS = `<link rel="stylesheet" href="/assets/fit-motion.css?v=20261028h" ${MARK}>`
   // Phone fixes (15 October 2026), every rule behind max-width: 767px. The
   // ?v= is there because the host caches stylesheets for 7 days: bump it when
   // the file changes.
