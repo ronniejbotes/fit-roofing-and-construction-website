@@ -6,6 +6,7 @@
 /about/
 /arlington/
 /asphalt-shingle-roof-texas-guide/
+/attic-insulation-texas/
 /attic-ventilation-texas-roof/
 /attics-texas/
 /best-roofing-company-dallas-tx/
@@ -31,6 +32,7 @@
 /portfolio/
 /post-sitemap.xml
 /privacy-policy/
+/radiant-barrier-texas/
 /replace-gutters-with-new-roof/
 /roof-inspection-texas/
 /roof-installation-texas/
@@ -46,6 +48,7 @@
 /sitemap_index.xml
 /skylight-installation-texas/
 /skylight-leak-after-storm/
+/solar-panel-removal-reinstall-texas/
 /storm-repair-texas/
 /tag/maintenance/
 /tag/planning/
