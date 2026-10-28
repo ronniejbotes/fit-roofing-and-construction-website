@@ -417,3 +417,73 @@
 
 /* Batch 2 (24 Oct 2026): the Service Coverage card on the town pages got shorter text; stretch it to the map's height from tablet width up. */
 @media (min-width: 768px){.elementor-element.elementor-element-ec7c6c7{--align-self:stretch;align-self:stretch}}
+
+/* Phone audit, 28 Oct 2026 (owner: "everything we do needs to be mobile friendly").
+   1. The menu opened as a 138px white strip on the right with 13px links and 11px
+      sub-links; with Services open its last four links (Portfolio, Roofing Locations,
+      Roofing Blog, Contact) sat below a 667px screen. A swipe beside the strip scrolled
+      the page, not the menu, and the chat button sat on its last rows. Now a full-width
+      panel under the 83px header bar: 17px links on 48px rows, its own scroll within
+      the space left on screen, no scroll chaining to the page, and the chat button
+      hidden while it is open.
+   2. html/body clip sideways overflow: two service pages shifted 2-3px sideways while a
+      slide-in animation ran. clip, unlike hidden, leaves the fixed header alone.
+   3. Blog tables: four 87px columns broke words mid-word ("condensat/e"); on phones the
+      table scrolls sideways inside the post instead, with readable columns. */
+@media (max-width: 767px) {
+  html, body { overflow-x: clip; }
+
+  .elementor-location-header nav.elementor-nav-menu--dropdown.elementor-nav-menu__container {
+    position: fixed !important;
+    top: 83px !important; /* the header bar is 83px tall at every phone width */
+    margin-top: 0 !important;
+    max-height: calc(100vh - 83px) !important;
+    max-height: calc(100dvh - 83px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, .35);
+  }
+  .elementor-location-header nav.elementor-nav-menu--dropdown a.elementor-item,
+  .elementor-location-header nav.elementor-nav-menu--dropdown a.elementor-sub-item {
+    font-size: 17px !important;
+    line-height: 1.3 !important;
+    min-height: 48px;
+    display: flex !important;
+    align-items: center;
+    padding: 12px 24px !important;
+  }
+  .elementor-location-header nav.elementor-nav-menu--dropdown a.elementor-sub-item {
+    font-size: 16px !important;
+    padding-left: 40px !important;
+  }
+  body:has(.elementor-location-header .elementor-menu-toggle.elementor-active) #chat-widget-push-to-talk {
+    display: none !important;
+  }
+
+  .elementor-widget-theme-post-content table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .elementor-widget-theme-post-content th,
+  .elementor-widget-theme-post-content td {
+    min-width: 8.5em;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    hyphens: manual !important;
+  }
+}
+
+/* Contact page info cards (28 Oct 2026): the email and phone lines were #7a7a7a on #1f1f1f (3.8:1);
+   the site's lighter body grey reads at about 7:1. The email address is now a mailto link like the phone. */
+.elementor-19 .elementor-element-e471187 .elementor-icon-box-description,
+.elementor-19 .elementor-widget-icon-box .elementor-icon-box-description { color: #A7A7A7 !important; }
+@media (max-width: 767px) {
+  /* ...and each line is a 44px tap target, not just its 18px of text. */
+  .elementor-19 .elementor-icon-box-description a { display: inline-block; padding: 13px 0; margin: -13px 0; }
+}
