@@ -635,7 +635,8 @@ html.fp-motion [data-fp-fade].is-in {
   .fp-card__num { font-size: clamp(1.9rem, 9svh, 3rem); }
   .fp-card__head { gap: .4rem .9rem; }
   .fp-card__name { font-size: clamp(1rem, 4.6vw, 1.3rem); }
-  .fp-card__cta { margin-left: 0; padding: .6rem 1.4rem; font-size: .7rem; }
+  .fp-card__cat { font-size: .8125rem; }
+  .fp-card__cta { margin-left: 0; padding: .6rem 1.4rem; font-size: .8125rem; min-height: 44px; }
 }
 
 /* Short viewports: the card has to fit inside the slot under the header, so
